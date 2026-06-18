@@ -12,7 +12,23 @@ export default function ContactPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.name && formData.email && formData.message) {
-      // Mock submit
+      const targetPhone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919777915706';
+      const cleanTargetPhone = targetPhone.replace(/\D/g, ''); // digits only
+
+      const messageText = `Hello Spark Furniture, I would like to send an inquiry:
+
+*Customer Details:*
+• Name: ${formData.name}
+• Email: ${formData.email}
+${formData.phone ? `• Phone: ${formData.phone}\n` : ''}
+*Message / Requirement:*
+${formData.message}`;
+
+      const encodedMessage = encodeURIComponent(messageText);
+      const whatsappUrl = `https://wa.me/${cleanTargetPhone}?text=${encodedMessage}`;
+
+      window.open(whatsappUrl, '_blank');
+
       setIsSubmitted(true);
       setFormData({ name: '', email: '', phone: '', message: '' });
     }
