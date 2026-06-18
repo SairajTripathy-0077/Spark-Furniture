@@ -81,7 +81,7 @@ export const CartDrawer: React.FC = () => {
       const itemsText = cart
         .map(
           (item, idx) =>
-            `${idx + 1}. *${item.name}*\n   - Color: ${item.selectedColor}\n   - Qty: ${item.quantity}\n   - Price: ₹${(
+            `${idx + 1}. *${item.name}*\n   - Qty: ${item.quantity}\n   - Price: ₹${(
               item.price * item.quantity
             ).toLocaleString()}`
         )
@@ -263,14 +263,7 @@ Please confirm my order progress. Thank you!`;
                           <h4 className="font-sans text-xs font-bold text-[#31170E] line-clamp-1">
                             {item.name}
                           </h4>
-                          <p className="mt-0.5 text-[10px] text-neutral-500 capitalize flex items-center gap-1.5">
-                            <span>Color:</span>
-                            <span
-                              className="inline-block h-2.5 w-2.5 rounded-full border border-black/10"
-                              style={{ backgroundColor: item.selectedColor }}
-                              title={item.selectedColor}
-                            />
-                          </p>
+
                         </div>
                         <span className="font-serif text-xs font-bold text-[#31170E]">
                           ₹{item.price}
