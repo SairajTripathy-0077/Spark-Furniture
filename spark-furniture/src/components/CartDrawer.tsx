@@ -24,6 +24,7 @@ export const CartDrawer: React.FC = () => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
+  const [address, setAddress] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -50,8 +51,8 @@ export const CartDrawer: React.FC = () => {
 
   const handleCheckoutSubmit = async () => {
     setError('');
-    if (!name.trim() || !phone.trim()) {
-      setError('Please fill in your Name and WhatsApp phone number.');
+    if (!name.trim() || !phone.trim() || !address.trim()) {
+      setError('Please fill in your Name, WhatsApp phone number, and Shipping Address.');
       return;
     }
 
@@ -65,6 +66,7 @@ export const CartDrawer: React.FC = () => {
           customerName: name,
           customerPhone: phone,
           customerEmail: email || null,
+          customerAddress: address,
           totalAmount: cartTotal,
           items: cart,
         }),
@@ -92,12 +94,12 @@ export const CartDrawer: React.FC = () => {
 *Customer Contact Details:*
 • Name: ${name}
 • Phone: ${phone}
-${email ? `• Email: ${email}\n` : ''}
+${email ? `• Email: ${email}\n` : ''}• Address: ${address}
+
 *Showcase Items Ordered:*
 ${itemsText}
 
 *Subtotal Amount:* ₹${cartTotal.toLocaleString()}
-*Shipping Type:* Complimentary
 
 Please confirm my order progress. Thank you!`;
 
@@ -116,6 +118,7 @@ Please confirm my order progress. Thank you!`;
       setName('');
       setPhone('');
       setEmail('');
+      setAddress('');
     } catch (err: any) {
       setError(err.message || 'Failed to submit order. Please try again.');
     } finally {
@@ -217,6 +220,18 @@ Please confirm my order progress. Thank you!`;
                         className="w-full mt-1.5 rounded-xl border border-neutral-200 bg-white py-2.5 px-4 text-xs font-semibold text-[#31170E] focus:border-[#31170E] focus:outline-none focus:ring-1 focus:ring-[#31170E]/20"
                       />
                     </div>
+
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase tracking-widest text-[#31170E]/60">Shipping Address *</label>
+                      <textarea
+                        required
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                        placeholder="Enter your full shipping address"
+                        rows={2}
+                        className="w-full mt-1.5 rounded-xl border border-neutral-200 bg-white py-2.5 px-4 text-xs font-semibold text-[#31170E] focus:border-[#31170E] focus:outline-none focus:ring-1 focus:ring-[#31170E]/20 resize-none"
+                      />
+                    </div>
                   </div>
                 </div>
               ) : cart.length === 0 ? (
@@ -315,10 +330,6 @@ Please confirm my order progress. Thank you!`;
             {/* Footer Summary (Sticky at bottom) */}
             {cart.length > 0 && (
               <div className="border-t border-[#31170E]/10 bg-white p-6 shadow-[0_-4px_12px_rgba(0,0,0,0.02)]">
-                <div className="flex items-center justify-between font-sans text-sm font-medium text-neutral-500 mb-2">
-                  <span>Shipping</span>
-                  <span className="text-green-600 font-semibold uppercase text-xs">Complimentary</span>
-                </div>
                 <div className="flex items-end justify-between mb-6">
                   <span className="font-serif text-base font-semibold text-[#31170E]">
                     Subtotal

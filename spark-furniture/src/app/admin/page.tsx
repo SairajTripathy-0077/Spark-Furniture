@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LogOut, Plus, Trash2, Edit2, Upload, ShoppingBag, 
-  Tag, List, User, Phone, Mail, Calendar, DollarSign, 
+  Tag, List, User, Phone, Mail, Calendar, DollarSign, MapPin, 
   X, Check, AlertCircle, Image as ImageIcon 
 } from 'lucide-react';
 
@@ -43,6 +43,7 @@ interface Order {
   customerName: string;
   customerPhone: string;
   customerEmail: string | null;
+  customerAddress?: string;
   totalAmount: number;
   status: string;
   items: string; // JSON string
@@ -944,6 +945,18 @@ export default function AdminDashboard() {
                     <div>
                       <div className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">Email Address</div>
                       <div className="font-semibold text-sm text-[#31170E]">{selectedOrder.customerEmail}</div>
+                    </div>
+                  </div>
+                )}
+
+                {selectedOrder.customerAddress && (
+                  <div className="flex items-center gap-3">
+                    <div className="rounded-full bg-[#31170E]/5 p-2.5 text-[#31170E]">
+                      <MapPin size={16} />
+                    </div>
+                    <div>
+                      <div className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">Shipping Address</div>
+                      <div className="font-semibold text-sm text-[#31170E]">{selectedOrder.customerAddress}</div>
                     </div>
                   </div>
                 )}

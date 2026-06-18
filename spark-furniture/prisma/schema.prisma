@@ -25,13 +25,14 @@ model Product {
 }
 
 model Order {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  customerName  String
-  customerPhone String
-  customerEmail String?
-  totalAmount   Float
-  status        String   @default("pending") // "pending", "completed", "cancelled"
-  items         String   // JSON array of cart items: [{"id":"...", "name":"...", "price":..., "quantity":..., "selectedColor":"...", "imageType":"..."}]
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  customerName    String
+  customerPhone   String
+  customerEmail   String?
+  customerAddress String   @default("")
+  totalAmount     Float
+  status          String   @default("pending") // "pending", "completed", "cancelled"
+  items           String   // JSON array of cart items: [{"id":"...", "name":"...", "price":..., "quantity":..., "selectedColor":"...", "imageType":"..."}]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }

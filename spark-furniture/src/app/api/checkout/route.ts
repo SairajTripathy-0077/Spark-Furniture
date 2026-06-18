@@ -4,21 +4,22 @@ import { prisma } from '@/lib/prisma';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { customerName, customerPhone, customerEmail, totalAmount, items } = body;
+    const { customerName, customerPhone, customerEmail, customerAddress, totalAmount, items } = body;
 
-    if (!customerName || !customerPhone || !items || totalAmount === undefined) {
+    if (!customerName || !customerPhone || !customerAddress || !items || totalAmount === undefined) {
       return NextResponse.json(
-        { success: false, message: 'Missing required checkout fields (Name, Phone, Items, Total).' },
+        { success: false, message: 'Missing required checkout fields (Name, Phone, Address, Items, Total).' },
         { status: 400 }
       );
     }
 
-    // Save order in SQLite database
+    // Save order in database
     const order = await prisma.order.create({
       data: {
         customerName,
         customerPhone,
         customerEmail: customerEmail || null,
+        customerAddress,
         totalAmount: parseFloat(totalAmount),
         items: typeof items === 'string' ? items : JSON.stringify(items),
         status: 'pending'
