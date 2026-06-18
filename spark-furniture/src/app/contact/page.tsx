@@ -11,7 +11,7 @@ export default function ContactPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.name && formData.email && formData.message) {
+    if (formData.name && formData.phone && formData.message) {
       const targetPhone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919777915706';
       const cleanTargetPhone = targetPhone.replace(/\D/g, ''); // digits only
 
@@ -19,8 +19,8 @@ export default function ContactPage() {
 
 *Customer Details:*
 • Name: ${formData.name}
-• Email: ${formData.email}
-${formData.phone ? `• Phone: ${formData.phone}\n` : ''}
+• Phone: ${formData.phone}
+${formData.email ? `• Email: ${formData.email}\n` : ''}
 *Message / Requirement:*
 ${formData.message}`;
 
@@ -141,11 +141,10 @@ ${formData.message}`;
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[11px] font-bold uppercase tracking-wider text-neutral-400" htmlFor="email">Email *</label>
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-neutral-400" htmlFor="email">Email (Optional)</label>
                     <input
                       id="email"
                       type="email"
-                      required
                       placeholder="your@email.com"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -155,10 +154,11 @@ ${formData.message}`;
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[11px] font-bold uppercase tracking-wider text-neutral-400" htmlFor="phone">Phone Number (Optional)</label>
+                  <label className="text-[11px] font-bold uppercase tracking-wider text-neutral-400" htmlFor="phone">Phone Number *</label>
                   <input
                     id="phone"
                     type="tel"
+                    required
                     placeholder="Your Phone Number"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
