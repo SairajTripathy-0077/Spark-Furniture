@@ -2,6 +2,10 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/session';
 
+export const dynamic = 'force-dynamic';
+
+type DbProduct = Awaited<ReturnType<typeof prisma.product.findMany>>[number];
+
 // Helper to check if request is from authenticated admin
 async function isAuthenticated() {
   const session = await getSession();
@@ -15,7 +19,7 @@ export async function GET() {
     });
     
     // Format product colors back to array of objects
-    const formatted = products.map((p) => {
+    const formatted = products.map((p: DbProduct) => {
       let colorsParsed = [];
       try {
         colorsParsed = typeof p.colors === 'string' ? JSON.parse(p.colors) : p.colors;
@@ -28,7 +32,13 @@ export async function GET() {
       };
     });
     
-    return NextResponse.json(formatted);
+    return NextResponse.json(formatted, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      }
+    });
   } catch (error) {
     console.error('Fetch products error:', error);
     return NextResponse.json(

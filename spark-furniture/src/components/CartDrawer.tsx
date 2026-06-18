@@ -81,7 +81,7 @@ export const CartDrawer: React.FC = () => {
       const itemsText = cart
         .map(
           (item, idx) =>
-            `${idx + 1}. *${item.name}*\n   - Color: ${item.selectedColor}\n   - Qty: ${item.quantity}\n   - Price: $${(
+            `${idx + 1}. *${item.name}*\n   - Color: ${item.selectedColor}\n   - Qty: ${item.quantity}\n   - Price: ₹${(
               item.price * item.quantity
             ).toLocaleString()}`
         )
@@ -96,7 +96,7 @@ ${email ? `• Email: ${email}\n` : ''}
 *Showcase Items Ordered:*
 ${itemsText}
 
-*Subtotal Amount:* $${cartTotal.toLocaleString()}
+*Subtotal Amount:* ₹${cartTotal.toLocaleString()}
 *Shipping Type:* Complimentary
 
 Please confirm my order progress. Thank you!`;
@@ -273,7 +273,7 @@ Please confirm my order progress. Thank you!`;
                           </p>
                         </div>
                         <span className="font-serif text-xs font-bold text-[#31170E]">
-                          ${item.price}
+                          ₹{item.price}
                         </span>
                       </div>
 
@@ -331,7 +331,7 @@ Please confirm my order progress. Thank you!`;
                     Subtotal
                   </span>
                   <span className="font-serif text-2xl font-bold text-[#31170E]">
-                    ${cartTotal.toLocaleString()}
+                    ₹{cartTotal.toLocaleString()}
                   </span>
                 </div>
 

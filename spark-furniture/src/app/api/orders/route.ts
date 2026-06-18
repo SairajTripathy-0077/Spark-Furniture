@@ -15,7 +15,13 @@ export async function GET() {
       orderBy: { createdAt: 'desc' }
     });
 
-    return NextResponse.json(orders);
+    return NextResponse.json(orders, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      }
+    });
   } catch (error: any) {
     console.error('Fetch orders error:', error);
     return NextResponse.json(

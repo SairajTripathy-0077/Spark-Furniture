@@ -90,7 +90,7 @@ export default function AdminDashboard() {
     // 1. Authenticate check
     async function checkAuth() {
       try {
-        const res = await fetch('/api/auth/check');
+        const res = await fetch('/api/auth/check', { cache: 'no-store' });
         if (!res.ok) {
           router.replace('/admin/login');
         } else {
@@ -109,7 +109,7 @@ export default function AdminDashboard() {
   // Fetch functions
   const fetchProducts = async () => {
     try {
-      const res = await fetch('/api/products');
+      const res = await fetch('/api/products', { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
         setProducts(data);
@@ -123,7 +123,7 @@ export default function AdminDashboard() {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch('/api/orders');
+      const res = await fetch('/api/orders', { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
         setOrders(data);
@@ -411,8 +411,8 @@ export default function AdminDashboard() {
                         </td>
                         <td className="px-6 py-4 text-xs font-bold uppercase tracking-wider">{prod.category}</td>
                         <td className="px-6 py-4 font-serif">
-                          <div>${prod.price}</div>
-                          {prod.originalPrice && <div className="text-xs text-neutral-400 line-through mt-0.5">${prod.originalPrice}</div>}
+                          <div>₹{prod.price}</div>
+                          {prod.originalPrice && <div className="text-xs text-neutral-400 line-through mt-0.5">₹{prod.originalPrice}</div>}
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex flex-wrap gap-1.5 max-w-xs">
@@ -519,7 +519,7 @@ export default function AdminDashboard() {
                               )}
                             </div>
                           </td>
-                          <td className="px-6 py-4 font-serif font-bold text-[#31170E]">${order.totalAmount.toLocaleString()}</td>
+                          <td className="px-6 py-4 font-serif font-bold text-[#31170E]">₹{order.totalAmount.toLocaleString()}</td>
                           <td className="px-6 py-4 text-neutral-500 font-normal">{totalItems} items</td>
                           <td className="px-6 py-4 text-xs font-normal text-neutral-400">
                             {new Date(order.createdAt).toLocaleDateString(undefined, {
@@ -663,10 +663,12 @@ export default function AdminDashboard() {
                       className="w-full mt-2 rounded-xl border border-neutral-200 bg-white py-2.5 px-4 text-xs font-bold uppercase tracking-wider text-[#31170E] focus:border-[#31170E] focus:outline-none focus:ring-1 focus:ring-[#31170E]/20 cursor-pointer transition-all duration-300"
                     >
                       <option value="Chairs">Chairs</option>
-                      <option value="Sofas">Sofas</option>
-                      <option value="Tables">Tables</option>
-                      <option value="Lighting">Lighting</option>
-                      <option value="Storage">Storage</option>
+                      <option value="Workstations">Workstations</option>
+                      <option value="Modular Furniture">Modular Furniture</option>
+                      <option value="Bed">Bed</option>
+                      <option value="Sofa">Sofa</option>
+                      <option value="Dinning Sets">Dinning Sets</option>
+                      <option value="Mattress">Mattress</option>
                     </select>
                   </div>
                 </div>
@@ -674,7 +676,7 @@ export default function AdminDashboard() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {/* Price */}
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-[#31170E]/70">Price ($)</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[#31170E]/70">Price (₹)</label>
                     <input
                       type="number"
                       required
@@ -688,7 +690,7 @@ export default function AdminDashboard() {
                   
                   {/* Original Price */}
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-[#31170E]/70">Original Price ($ - Optional)</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[#31170E]/70">Original Price (₹ - Optional)</label>
                     <input
                       type="number"
                       value={originalPrice}
@@ -913,7 +915,7 @@ export default function AdminDashboard() {
                           </span>
                         </div>
                       </div>
-                      <span className="font-serif text-sm font-bold text-[#31170E]">${(item.price * item.quantity).toLocaleString()}</span>
+                      <span className="font-serif text-sm font-bold text-[#31170E]">₹{(item.price * item.quantity).toLocaleString()}</span>
                     </div>
                   ));
                 })()}
@@ -922,7 +924,7 @@ export default function AdminDashboard() {
               {/* Total summary */}
               <div className="flex items-center justify-between pt-4 border-t border-[#31170E]/10">
                 <span className="font-semibold text-[#31170E]">Subtotal Invoiced</span>
-                <span className="font-serif text-xl font-bold text-[#31170E]">${selectedOrder.totalAmount.toLocaleString()}</span>
+                <span className="font-serif text-xl font-bold text-[#31170E]">₹{selectedOrder.totalAmount.toLocaleString()}</span>
               </div>
 
               <div className="mt-8 flex justify-end">

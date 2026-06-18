@@ -16,7 +16,7 @@ export default function AdminLogin() {
     // Check if already authenticated
     async function checkAuth() {
       try {
-        const res = await fetch('/api/auth/check');
+        const res = await fetch('/api/auth/check', { cache: 'no-store' });
         if (res.ok) {
           router.replace('/admin');
         } else {

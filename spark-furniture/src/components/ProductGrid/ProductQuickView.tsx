@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Star, ShoppingCart, ShieldCheck, Truck, RefreshCw } from 'lucide-react';
+import { X, ShoppingCart } from 'lucide-react';
 import { Product } from './ProductCard';
 import { useCart } from '@/context/CartContext';
 import FurnitureSketch from './FurnitureSketch';
@@ -12,15 +12,19 @@ interface ProductQuickViewProps {
   onClose: () => void;
 }
 
+const DEFAULT_COLOR = { name: 'Default', hex: '#31170E' };
+
 export const ProductQuickView: React.FC<ProductQuickViewProps> = ({ product, onClose }) => {
   const { addToCart } = useCart();
-  const [selectedColor, setSelectedColor] = useState(product?.colors[0]);
+  const [selectedColor, setSelectedColor] = useState(
+    product?.colors && product.colors.length > 0 ? product.colors[0] : DEFAULT_COLOR
+  );
   const [quantity, setQuantity] = useState(1);
 
   // Sync selected color when product changes
   useEffect(() => {
     if (product) {
-      setSelectedColor(product.colors[0]);
+      setSelectedColor(product.colors && product.colors.length > 0 ? product.colors[0] : DEFAULT_COLOR);
       setQuantity(1);
     }
   }, [product]);
@@ -42,7 +46,7 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({ product, onC
         id: product.id,
         name: product.name,
         price: product.price,
-        selectedColor: selectedColor.hex,
+        selectedColor: selectedColor ? selectedColor.hex : DEFAULT_COLOR.hex,
         imageType: product.imageType,
       });
     }
@@ -132,31 +136,16 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({ product, onC
                 {product.name}
               </h2>
 
-              {/* Rating */}
-              <div className="mt-2 flex items-center gap-2">
-                <div className="flex items-center text-amber-500">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      size={14}
-                      fill={i < Math.floor(product.rating) ? 'currentColor' : 'transparent'}
-                      className={i < Math.floor(product.rating) ? 'text-amber-500' : 'text-neutral-300'}
-                    />
-                  ))}
-                </div>
-                <span className="text-xs font-semibold text-neutral-600">
-                  {product.rating} ({product.reviewsCount} reviews)
-                </span>
-              </div>
+
 
               {/* Price */}
               <div className="mt-4 flex items-baseline gap-3">
                 <span className="font-serif text-2xl font-bold text-[#31170E]">
-                  ${product.price}
+                  ₹{product.price}
                 </span>
                 {product.originalPrice && (
                   <span className="text-sm text-neutral-400 line-through">
-                    ${product.originalPrice}
+                    ₹{product.originalPrice}
                   </span>
                 )}
               </div>
@@ -170,27 +159,29 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({ product, onC
               </p>
 
               {/* Interactive Color selector */}
-              <div className="mt-6">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-500 flex items-center gap-1.5">
-                  Finish: <span className="text-[#31170E] font-semibold font-sans normal-case">{selectedColor.name}</span>
-                </h4>
-                <div className="flex gap-2 mt-2">
-                  {product.colors.map((color) => (
-                    <button
-                      key={color.hex}
-                      onClick={() => setSelectedColor(color)}
-                      className={`relative h-7 w-7 rounded-full border border-black/10 p-0.5 transition-all duration-200 cursor-pointer ${
-                        selectedColor.hex === color.hex ? 'ring-2 ring-[#31170E] ring-offset-2' : 'hover:scale-105'
-                      }`}
-                    >
-                      <span
-                        className="block h-full w-full rounded-full"
-                        style={{ backgroundColor: color.hex }}
-                      />
-                    </button>
-                  ))}
+              {product.colors && product.colors.length > 0 && selectedColor && (
+                <div className="mt-6">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-500 flex items-center gap-1.5">
+                    Finish: <span className="text-[#31170E] font-semibold font-sans normal-case">{selectedColor.name}</span>
+                  </h4>
+                  <div className="flex gap-2 mt-2">
+                    {product.colors.map((color) => (
+                      <button
+                        key={color.hex}
+                        onClick={() => setSelectedColor(color)}
+                        className={`relative h-7 w-7 rounded-full border border-black/10 p-0.5 transition-all duration-200 cursor-pointer ${
+                          selectedColor.hex === color.hex ? 'ring-2 ring-[#31170E] ring-offset-2' : 'hover:scale-105'
+                        }`}
+                      >
+                        <span
+                          className="block h-full w-full rounded-full"
+                          style={{ backgroundColor: color.hex }}
+                        />
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Actions Panel */}
@@ -223,25 +214,11 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({ product, onC
                   className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-[#31170E] py-3 text-sm font-semibold text-[#fdf9f4] shadow-md transition-all hover:bg-[#6b4335] active:scale-[0.98] cursor-pointer"
                 >
                   <ShoppingCart size={16} />
-                  Add to Cart - ${(product.price * quantity).toLocaleString()}
+                  Add to Cart - ₹{(product.price * quantity).toLocaleString()}
                 </button>
               </div>
 
-              {/* Guarantees */}
-              <div className="grid grid-cols-3 gap-2 pt-2 text-[10px] text-neutral-500 font-medium border-t border-neutral-100/50">
-                <div className="flex items-center gap-1.5 justify-center">
-                  <ShieldCheck size={14} className="text-[#31170E]/60" />
-                  <span>5-Year Warranty</span>
-                </div>
-                <div className="flex items-center gap-1.5 justify-center">
-                  <Truck size={14} className="text-[#31170E]/60" />
-                  <span>Free Shipping</span>
-                </div>
-                <div className="flex items-center gap-1.5 justify-center">
-                  <RefreshCw size={14} className="text-[#31170E]/60" />
-                  <span>30-Day Returns</span>
-                </div>
-              </div>
+
             </div>
           </div>
         </motion.div>

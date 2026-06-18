@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Eye, ShoppingCart, Star, Heart } from 'lucide-react';
+import { Eye, ShoppingCart, Heart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import FurnitureSketch from './FurnitureSketch';
 
@@ -24,12 +24,17 @@ export interface Product {
 interface ProductCardProps {
   product: Product;
   onQuickView: (product: Product) => void;
+  isWishlisted: boolean;
+  onToggleWishlist: () => void;
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
+const DEFAULT_COLOR = { name: 'Default', hex: '#31170E' };
+
+export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView, isWishlisted, onToggleWishlist }) => {
   const { addToCart } = useCart();
-  const [selectedColor, setSelectedColor] = useState(product.colors[0]);
-  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [selectedColor, setSelectedColor] = useState(
+    product.colors && product.colors.length > 0 ? product.colors[0] : DEFAULT_COLOR
+  );
   const [isHovered, setIsHovered] = useState(false);
 
   const handleAddToCart = (e: React.MouseEvent) => {
@@ -38,7 +43,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
       id: product.id,
       name: product.name,
       price: product.price,
-      selectedColor: selectedColor.hex,
+      selectedColor: selectedColor ? selectedColor.hex : DEFAULT_COLOR.hex,
       imageType: product.imageType,
       imageUrl: product.imageUrl || undefined,
     });
@@ -83,7 +88,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
         <button
           onClick={(e) => {
             e.stopPropagation();
-            setIsWishlisted(!isWishlisted);
+            onToggleWishlist();
           }}
           className="absolute top-3 right-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur-sm text-neutral-600 shadow-sm transition-all hover:bg-white hover:text-red-500 active:scale-90 cursor-pointer"
           aria-label="Add to wishlist"
@@ -109,53 +114,51 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
             {product.category}
           </span>
 
-          {/* Title & Rating */}
-          <div className="mt-1 flex items-start justify-between gap-2">
+          {/* Title */}
+          <div className="mt-1">
             <h3 className="font-sans text-base font-semibold text-[#31170E] line-clamp-1 group-hover:text-[#6b4335] transition-colors duration-200">
               {product.name}
             </h3>
-            <div className="flex items-center gap-0.5 text-amber-500 mt-0.5">
-              <Star size={12} fill="currentColor" />
-              <span className="text-[11px] font-bold text-neutral-600">{product.rating}</span>
-            </div>
           </div>
 
           {/* Price */}
           <div className="mt-1.5 flex items-baseline gap-2">
             <span className="font-serif text-lg font-bold text-[#31170E]">
-              ${product.price}
+              ₹{product.price}
             </span>
             {product.originalPrice && (
               <span className="text-xs text-neutral-400 line-through">
-                ${product.originalPrice}
+                ₹{product.originalPrice}
               </span>
             )}
           </div>
         </div>
 
         {/* Color Swatches (Permanent) */}
-        <div className="mt-4 border-t border-neutral-100 pt-3">
-          <div className="flex gap-1.5">
-            {product.colors.map((color) => (
-              <button
-                key={color.hex}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setSelectedColor(color);
-                }}
-                className={`relative h-5 w-5 rounded-full border border-black/10 p-0.5 transition-all duration-200 cursor-pointer ${
-                  selectedColor.hex === color.hex ? 'ring-1 ring-[#31170E] ring-offset-1' : 'hover:scale-110'
-                }`}
-                title={color.name}
-              >
-                <span
-                  className="block h-full w-full rounded-full"
-                  style={{ backgroundColor: color.hex }}
-                />
-              </button>
-            ))}
+        {product.colors && product.colors.length > 0 && (
+          <div className="mt-4 border-t border-neutral-100 pt-3">
+            <div className="flex gap-1.5">
+              {product.colors.map((color) => (
+                <button
+                  key={color.hex}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedColor(color);
+                  }}
+                  className={`relative h-5 w-5 rounded-full border border-black/10 p-0.5 transition-all duration-200 cursor-pointer ${
+                    selectedColor && selectedColor.hex === color.hex ? 'ring-1 ring-[#31170E] ring-offset-1' : 'hover:scale-110'
+                  }`}
+                  title={color.name}
+                >
+                  <span
+                    className="block h-full w-full rounded-full"
+                    style={{ backgroundColor: color.hex }}
+                  />
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Action Buttons (Permanent, Desktop & Mobile) */}
         <div className="mt-3.5 flex gap-2">
