@@ -5,6 +5,8 @@ import Header from "../components/navbar/Header";
 import Footer from "@/components/Footer/Footer";
 import { CartProvider } from "@/context/CartContext";
 import CartDrawer from "@/components/CartDrawer";
+import { FavoritesProvider } from "@/context/FavoritesContext";
+import FavoritesDrawer from "@/components/FavoritesDrawer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,12 +35,15 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <CartProvider>
-          <Header/>
-          <main className="flex-1">
-            {children}
-          </main>
-          <CartDrawer />
-          <Footer />
+          <FavoritesProvider>
+            <Header/>
+            <main className="flex-1">
+              {children}
+            </main>
+            <CartDrawer />
+            <FavoritesDrawer />
+            <Footer />
+          </FavoritesProvider>
         </CartProvider>
       </body>
     </html>
