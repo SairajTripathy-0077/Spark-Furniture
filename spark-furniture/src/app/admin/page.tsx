@@ -379,99 +379,162 @@ export default function AdminDashboard() {
                 </button>
               </div>
             ) : (
-              <div className="overflow-x-auto w-full rounded-2xl border border-neutral-100 bg-white shadow-sm">
-                <table className="min-w-[800px] md:min-w-full divide-y divide-neutral-100 text-left text-sm">
-                  <thead className="bg-neutral-55 text-xs font-bold uppercase tracking-wider text-[#31170E]/70">
-                    <tr>
-                      <th className="px-4 py-3 md:px-6 md:py-4">Product</th>
-                      <th className="px-4 py-3 md:px-6 md:py-4 hidden sm:table-cell">Category</th>
-                      <th className="px-4 py-3 md:px-6 md:py-4">Price</th>
-                      <th className="px-4 py-3 md:px-6 md:py-4 hidden md:table-cell">Colors</th>
-                      <th className="px-4 py-3 md:px-6 md:py-4 hidden sm:table-cell">Badge</th>
-                      <th className="px-4 py-3 md:px-6 md:py-4 text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-neutral-100 font-medium text-neutral-600">
-                    {products.map((prod) => (
-                      <tr key={prod.id} className="hover:bg-neutral-50/50 transition-colors">
-                        <td className="px-4 py-3 md:px-6 md:py-4">
-                          <div className="flex items-center gap-3 md:gap-4">
-                            <div className="h-10 w-10 md:h-12 md:w-12 flex-shrink-0 items-center justify-center rounded-lg bg-[#fdf9f4] border border-neutral-100 overflow-hidden flex">
-                              {prod.imageUrl ? (
-                                <img src={prod.imageUrl} alt={prod.name} className="h-full w-full object-cover" />
-                              ) : (
-                                <span className="text-[10px] font-bold text-neutral-400 uppercase">{prod.imageType}</span>
-                              )}
-                            </div>
-                            <div>
-                              <div className="font-semibold text-[#31170E] text-xs md:text-sm">{prod.name}</div>
-                              <div className="text-[10px] md:text-[11px] text-neutral-400 mt-0.5 line-clamp-1 max-w-[150px] sm:max-w-xs font-normal">{prod.description}</div>
-                              {/* Mobile indicators */}
-                              <div className="flex flex-wrap items-center gap-1.5 mt-1 sm:hidden">
-                                <span className="rounded bg-[#31170E]/5 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#31170E]">
-                                  {prod.category}
-                                </span>
-                                {prod.badge && (
-                                  <span className="rounded bg-amber-500/10 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-amber-700">
-                                    {prod.badge}
-                                  </span>
+              <>
+                {/* Mobile View: Cards (hidden on desktop) */}
+                <div className="grid grid-cols-1 gap-4 md:hidden">
+                  {products.map((prod) => (
+                    <div key={prod.id} className="rounded-2xl border border-neutral-100 bg-white p-4 shadow-sm flex flex-col gap-3">
+                      <div className="flex items-start gap-4">
+                        <div className="h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg bg-[#fdf9f4] border border-neutral-100 overflow-hidden flex">
+                          {prod.imageUrl ? (
+                            <img src={prod.imageUrl} alt={prod.name} className="h-full w-full object-cover" />
+                          ) : (
+                            <span className="text-[10px] font-bold text-neutral-400 uppercase">{prod.imageType}</span>
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-semibold text-[#31170E] text-sm truncate">{prod.name}</div>
+                          <div className="text-[11px] text-neutral-400 mt-0.5 line-clamp-2 font-normal">{prod.description}</div>
+                          <div className="flex flex-wrap items-center gap-1.5 mt-2">
+                            <span className="rounded bg-[#31170E]/5 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#31170E]">
+                              {prod.category}
+                            </span>
+                            {prod.badge && (
+                              <span className="rounded bg-amber-500/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-amber-700">
+                                {prod.badge}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between border-t border-neutral-100 pt-3">
+                        <div>
+                          <div className="text-[9px] font-bold text-neutral-400 uppercase tracking-widest">Price</div>
+                          <div className="font-serif text-sm font-bold text-[#31170E] mt-0.5">
+                            ₹{prod.price}
+                            {prod.originalPrice && <span className="text-xs text-neutral-400 line-through font-normal ml-1.5">₹{prod.originalPrice}</span>}
+                          </div>
+                        </div>
+
+                        <div>
+                          <div className="text-[9px] font-bold text-neutral-400 uppercase tracking-widest mb-1">Colors</div>
+                          <div className="flex gap-1 items-center">
+                            {prod.colors && prod.colors.slice(0, 3).map((c, i) => (
+                              <span key={i} className="h-3.5 w-3.5 rounded-full border border-black/10 shadow-xs" style={{ backgroundColor: c.hex }} title={c.name} />
+                            ))}
+                            {prod.colors && prod.colors.length > 3 && (
+                              <span className="text-[10px] text-neutral-400 font-semibold">+{prod.colors.length - 3}</span>
+                            )}
+                            {(!prod.colors || prod.colors.length === 0) && <span className="text-[10px] text-neutral-400 italic">None</span>}
+                          </div>
+                        </div>
+
+                        <div className="flex gap-1.5">
+                          <button
+                            onClick={() => handleEditProduct(prod)}
+                            className="rounded-lg p-2 text-neutral-500 hover:bg-[#31170E]/5 hover:text-[#31170E] border border-neutral-100 bg-neutral-50/50 transition-colors cursor-pointer"
+                            aria-label="Edit product"
+                          >
+                            <Edit2 size={14} />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteProduct(prod.id)}
+                            className="rounded-lg p-2 text-neutral-500 hover:bg-red-50 hover:text-red-600 border border-neutral-100 bg-neutral-50/50 transition-colors cursor-pointer"
+                            aria-label="Delete product"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Desktop View: Table (hidden on mobile) */}
+                <div className="hidden md:block overflow-hidden rounded-2xl border border-neutral-100 bg-white shadow-sm">
+                  <table className="min-w-full divide-y divide-neutral-100 text-left text-sm">
+                    <thead className="bg-neutral-55 text-xs font-bold uppercase tracking-wider text-[#31170E]/70">
+                      <tr>
+                        <th className="px-6 py-4">Product</th>
+                        <th className="px-6 py-4">Category</th>
+                        <th className="px-6 py-4">Price</th>
+                        <th className="px-6 py-4">Colors</th>
+                        <th className="px-6 py-4">Badge</th>
+                        <th className="px-6 py-4 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-neutral-100 font-medium text-neutral-600">
+                      {products.map((prod) => (
+                        <tr key={prod.id} className="hover:bg-neutral-50/50 transition-colors">
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-4">
+                              <div className="h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-[#fdf9f4] border border-neutral-100 overflow-hidden flex">
+                                {prod.imageUrl ? (
+                                  <img src={prod.imageUrl} alt={prod.name} className="h-full w-full object-cover" />
+                                ) : (
+                                  <span className="text-[10px] font-bold text-neutral-400 uppercase">{prod.imageType}</span>
                                 )}
                               </div>
+                              <div>
+                                <div className="font-semibold text-[#31170E]">{prod.name}</div>
+                                <div className="text-[11px] text-neutral-400 mt-0.5 line-clamp-1 max-w-xs font-normal">{prod.description}</div>
+                              </div>
                             </div>
-                          </div>
-                        </td>
-                        <td className="px-4 py-3 md:px-6 md:py-4 text-xs font-bold uppercase tracking-wider hidden sm:table-cell">{prod.category}</td>
-                        <td className="px-4 py-3 md:px-6 md:py-4 font-serif text-xs md:text-sm">
-                          <div>₹{prod.price}</div>
-                          {prod.originalPrice && <div className="text-[10px] md:text-xs text-neutral-400 line-through mt-0.5">₹{prod.originalPrice}</div>}
-                        </td>
-                        <td className="px-4 py-3 md:px-6 md:py-4 hidden md:table-cell">
-                          <div className="flex flex-wrap gap-1.5 max-w-xs">
-                            {prod.colors && prod.colors.map((c, i) => (
-                              <span 
-                                key={i} 
-                                className="inline-flex items-center gap-1 rounded-full border border-neutral-200 bg-white px-2 py-0.5 text-[10px]"
-                                title={c.name}
-                              >
-                                <span className="h-2 w-2 rounded-full border border-black/15" style={{ backgroundColor: c.hex }} />
-                                <span className="text-neutral-500 font-normal">{c.name}</span>
+                          </td>
+                          <td className="px-6 py-4 text-xs font-bold uppercase tracking-wider">{prod.category}</td>
+                          <td className="px-6 py-4 font-serif">
+                            <div>₹{prod.price}</div>
+                            {prod.originalPrice && <div className="text-xs text-neutral-400 line-through mt-0.5">₹{prod.originalPrice}</div>}
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex flex-wrap gap-1.5 max-w-xs">
+                              {prod.colors && prod.colors.map((c, i) => (
+                                <span 
+                                  key={i} 
+                                  className="inline-flex items-center gap-1 rounded-full border border-neutral-200 bg-white px-2 py-0.5 text-[10px]"
+                                  title={c.name}
+                                >
+                                  <span className="h-2 w-2 rounded-full border border-black/15" style={{ backgroundColor: c.hex }} />
+                                  <span className="text-neutral-500 font-normal">{c.name}</span>
+                                </span>
+                              ))}
+                              {(!prod.colors || prod.colors.length === 0) && <span className="text-xs text-neutral-400 font-normal italic">No colors</span>}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            {prod.badge ? (
+                              <span className="rounded bg-[#31170E]/5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#31170E]">
+                                {prod.badge}
                               </span>
-                            ))}
-                            {(!prod.colors || prod.colors.length === 0) && <span className="text-xs text-neutral-400 font-normal italic">No colors</span>}
-                          </div>
-                        </td>
-                        <td className="px-4 py-3 md:px-6 md:py-4 hidden sm:table-cell">
-                          {prod.badge ? (
-                            <span className="rounded bg-[#31170E]/5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#31170E]">
-                              {prod.badge}
-                            </span>
-                          ) : (
-                            <span className="text-neutral-300">-</span>
-                          )}
-                        </td>
-                        <td className="px-4 py-3 md:px-6 md:py-4 text-right">
-                          <div className="flex justify-end gap-1 md:gap-2">
-                            <button
-                              onClick={() => handleEditProduct(prod)}
-                              className="rounded-lg p-1.5 md:p-2 text-neutral-400 hover:bg-[#31170E]/5 hover:text-[#31170E] transition-colors cursor-pointer"
-                              aria-label="Edit product"
-                            >
-                              <Edit2 size={14} />
-                            </button>
-                            <button
-                              onClick={() => handleDeleteProduct(prod.id)}
-                              className="rounded-lg p-1.5 md:p-2 text-neutral-400 hover:bg-red-50 hover:text-red-600 transition-colors cursor-pointer"
-                              aria-label="Delete product"
-                            >
-                              <Trash2 size={14} />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                            ) : (
+                              <span className="text-neutral-300">-</span>
+                            )}
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            <div className="flex justify-end gap-2">
+                              <button
+                                onClick={() => handleEditProduct(prod)}
+                                className="rounded-lg p-2 text-neutral-400 hover:bg-[#31170E]/5 hover:text-[#31170E] transition-colors cursor-pointer"
+                                aria-label="Edit product"
+                              >
+                                <Edit2 size={15} />
+                              </button>
+                              <button
+                                onClick={() => handleDeleteProduct(prod.id)}
+                                className="rounded-lg p-2 text-neutral-400 hover:bg-red-50 hover:text-red-600 transition-colors cursor-pointer"
+                                aria-label="Delete product"
+                              >
+                                <Trash2 size={15} />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
             )}
           </div>
         ) : (
@@ -491,45 +554,24 @@ export default function AdminDashboard() {
                 <p className="text-sm text-neutral-500 mt-2">Leads will show up here automatically when customers check out.</p>
               </div>
             ) : (
-              <div className="overflow-x-auto w-full rounded-2xl border border-neutral-100 bg-white shadow-sm">
-                <table className="min-w-[800px] md:min-w-full divide-y divide-neutral-100 text-left text-sm">
-                  <thead className="bg-neutral-55 text-xs font-bold uppercase tracking-wider text-[#31170E]/70">
-                    <tr>
-                      <th className="px-4 py-3 md:px-6 md:py-4">Customer</th>
-                      <th className="px-4 py-3 md:px-6 md:py-4">Contact</th>
-                      <th className="px-4 py-3 md:px-6 md:py-4">Total Amount</th>
-                      <th className="px-4 py-3 md:px-6 md:py-4 hidden sm:table-cell">Ordered Items Count</th>
-                      <th className="px-4 py-3 md:px-6 md:py-4 hidden md:table-cell">Date</th>
-                      <th className="px-4 py-3 md:px-6 md:py-4 text-right">Details</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-neutral-100 font-medium text-neutral-600">
-                    {orders.map((order) => {
-                      let itemsArr: OrderItem[] = [];
-                      try {
-                        itemsArr = JSON.parse(order.items);
-                      } catch (e) {
-                        console.error('Failed to parse items for order:', order.id);
-                      }
-                      const totalItems = itemsArr.reduce((acc, curr) => acc + curr.quantity, 0);
-                      
-                      return (
-                        <tr key={order.id} className="hover:bg-neutral-50/50 transition-colors">
-                          <td className="px-4 py-3 md:px-6 md:py-4">
-                            <div className="font-semibold text-[#31170E] text-xs md:text-sm">{order.customerName}</div>
-                            {/* Mobile helper details */}
-                            <div className="flex flex-col gap-0.5 mt-1 sm:hidden">
-                              <span className="text-[10px] text-neutral-500 font-normal">{totalItems} items</span>
-                              <span className="text-[10px] text-neutral-400 font-normal">
-                                {new Date(order.createdAt).toLocaleDateString(undefined, {
-                                  month: 'short',
-                                  day: 'numeric',
-                                  hour: '2-digit',
-                                  minute: '2-digit'
-                                })}
-                              </span>
-                            </div>
-                            <div className="hidden sm:block md:hidden text-[10px] text-neutral-400 font-normal mt-0.5">
+              <>
+                {/* Mobile View: Customer Leads Cards (hidden on desktop) */}
+                <div className="grid grid-cols-1 gap-4 md:hidden">
+                  {orders.map((order) => {
+                    let itemsArr: OrderItem[] = [];
+                    try {
+                      itemsArr = JSON.parse(order.items);
+                    } catch (e) {
+                      console.error('Failed to parse items for order:', order.id);
+                    }
+                    const totalItems = itemsArr.reduce((acc, curr) => acc + curr.quantity, 0);
+
+                    return (
+                      <div key={order.id} className="rounded-2xl border border-neutral-100 bg-white p-4 shadow-sm flex flex-col gap-3">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <div className="font-semibold text-[#31170E] text-sm">{order.customerName}</div>
+                            <div className="text-[10px] text-neutral-400 font-normal mt-0.5">
                               {new Date(order.createdAt).toLocaleDateString(undefined, {
                                 month: 'short',
                                 day: 'numeric',
@@ -537,46 +579,109 @@ export default function AdminDashboard() {
                                 minute: '2-digit'
                               })}
                             </div>
-                          </td>
-                          <td className="px-4 py-3 md:px-6 md:py-4">
-                            <div className="flex flex-col gap-0.5 text-xs font-sans font-normal">
-                              <span className="flex items-center gap-1 font-semibold text-[#31170E]/80">
-                                <Phone size={11} className="flex-shrink-0" />
-                                <span className="truncate max-w-[120px] sm:max-w-none">{order.customerPhone}</span>
-                              </span>
-                              {order.customerEmail && (
-                                <span className="flex items-center gap-1 text-neutral-400">
-                                  <Mail size={11} className="flex-shrink-0" />
-                                  <span className="truncate max-w-[120px] sm:max-w-none">{order.customerEmail}</span>
+                          </div>
+                          <span className="rounded bg-[#31170E]/5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#31170E] h-fit">
+                            {totalItems} items
+                          </span>
+                        </div>
+
+                        <div className="flex flex-col gap-1 text-[11px] text-neutral-650 bg-[#fdf9f4]/50 rounded-xl p-2.5 border border-[#31170E]/5">
+                          <span className="flex items-center gap-1.5 font-medium">
+                            <Phone size={12} className="text-[#31170E]/60 flex-shrink-0" />
+                            {order.customerPhone}
+                          </span>
+                          {order.customerEmail && (
+                            <span className="flex items-center gap-1.5 text-neutral-500">
+                              <Mail size={12} className="text-[#31170E]/40 flex-shrink-0" />
+                              {order.customerEmail}
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="flex items-center justify-between border-t border-neutral-100 pt-3">
+                          <div>
+                            <div className="text-[9px] font-bold text-neutral-400 uppercase tracking-widest">Total Amount</div>
+                            <div className="font-serif font-bold text-base text-[#31170E] mt-0.5">₹{order.totalAmount.toLocaleString()}</div>
+                          </div>
+
+                          <button
+                            onClick={() => setSelectedOrder(order)}
+                            className="rounded-full bg-[#31170E] hover:bg-[#6b4335] px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-[#fdf9f4] shadow-sm transition-all cursor-pointer"
+                          >
+                            View Items
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Desktop View: Customer Leads Table (hidden on mobile) */}
+                <div className="hidden md:block overflow-hidden rounded-2xl border border-neutral-100 bg-white shadow-sm">
+                  <table className="min-w-full divide-y divide-neutral-100 text-left text-sm">
+                    <thead className="bg-neutral-55 text-xs font-bold uppercase tracking-wider text-[#31170E]/70">
+                      <tr>
+                        <th className="px-6 py-4">Customer</th>
+                        <th className="px-6 py-4">Contact</th>
+                        <th className="px-6 py-4">Total Amount</th>
+                        <th className="px-6 py-4">Ordered Items Count</th>
+                        <th className="px-6 py-4">Date</th>
+                        <th className="px-6 py-4 text-right">Details</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-neutral-100 font-medium text-neutral-600">
+                      {orders.map((order) => {
+                        let itemsArr: OrderItem[] = [];
+                        try {
+                          itemsArr = JSON.parse(order.items);
+                        } catch (e) {
+                          console.error('Failed to parse items for order:', order.id);
+                        }
+                        const totalItems = itemsArr.reduce((acc, curr) => acc + curr.quantity, 0);
+                        
+                        return (
+                          <tr key={order.id} className="hover:bg-neutral-50/50 transition-colors">
+                            <td className="px-6 py-4 font-semibold text-[#31170E]">{order.customerName}</td>
+                            <td className="px-6 py-4">
+                              <div className="flex flex-col gap-0.5 text-xs font-sans font-normal">
+                                <span className="flex items-center gap-1 font-semibold text-[#31170E]/80">
+                                  <Phone size={11} />
+                                  {order.customerPhone}
                                 </span>
-                              )}
-                            </div>
-                          </td>
-                          <td className="px-4 py-3 md:px-6 md:py-4 font-serif font-bold text-xs md:text-sm text-[#31170E]">₹{order.totalAmount.toLocaleString()}</td>
-                          <td className="px-4 py-3 md:px-6 md:py-4 text-neutral-500 font-normal hidden sm:table-cell">{totalItems} items</td>
-                          <td className="px-4 py-3 md:px-6 md:py-4 text-xs font-normal text-neutral-400 hidden md:table-cell">
-                            {new Date(order.createdAt).toLocaleDateString(undefined, {
-                              year: 'numeric',
-                              month: 'short',
-                              day: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            })}
-                          </td>
-                          <td className="px-4 py-3 md:px-6 md:py-4 text-right">
-                            <button
-                              onClick={() => setSelectedOrder(order)}
-                              className="rounded-full bg-[#31170E]/5 hover:bg-[#31170E] px-3 py-1.5 md:px-4 md:py-1.5 text-[10px] md:text-xs font-bold uppercase tracking-wider text-[#31170E] hover:text-[#fdf9f4] transition-all cursor-pointer whitespace-nowrap"
-                            >
-                              View Items
-                            </button>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+                                {order.customerEmail && (
+                                  <span className="flex items-center gap-1 text-neutral-400">
+                                    <Mail size={11} />
+                                    {order.customerEmail}
+                                  </span>
+                                )}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 font-serif font-bold text-[#31170E]">₹{order.totalAmount.toLocaleString()}</td>
+                            <td className="px-6 py-4 text-neutral-500 font-normal">{totalItems} items</td>
+                            <td className="px-6 py-4 text-xs font-normal text-neutral-400">
+                              {new Date(order.createdAt).toLocaleDateString(undefined, {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </td>
+                            <td className="px-6 py-4 text-right">
+                              <button
+                                onClick={() => setSelectedOrder(order)}
+                                className="rounded-full bg-[#31170E]/5 hover:bg-[#31170E] px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#31170E] hover:text-[#fdf9f4] transition-all cursor-pointer"
+                              >
+                                View Items
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </>
             )}
           </div>
         )}
