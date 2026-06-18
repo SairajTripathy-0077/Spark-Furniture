@@ -299,30 +299,30 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen bg-[#fdf9f4] text-[#31170E] font-sans pb-16">
       {/* Top Header */}
-      <header className="border-b border-[#31170E]/10 bg-white px-6 py-4 md:px-12 shadow-sm">
+      <header className="border-b border-[#31170E]/10 bg-white px-4 py-4 md:px-12 shadow-sm">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
           <div className="flex items-baseline gap-2">
-            <h1 className="font-serif text-2xl font-bold tracking-tight">Spark Furniture</h1>
-            <span className="rounded-full bg-[#31170E]/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#31170E]">Admin</span>
+            <h1 className="font-serif text-xl sm:text-2xl font-bold tracking-tight">Spark Furniture</h1>
+            <span className="rounded-full bg-[#31170E]/5 px-2 py-0.5 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-[#31170E]">Admin</span>
           </div>
           
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 rounded-full border border-neutral-200 px-4 py-2 text-xs font-bold uppercase tracking-wider text-neutral-500 hover:border-red-200 hover:text-red-600 transition-all cursor-pointer"
+            className="flex items-center gap-1.5 sm:gap-2 rounded-full border border-neutral-200 px-3 py-1.5 sm:px-4 sm:py-2 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-neutral-500 hover:border-red-200 hover:text-red-600 transition-all cursor-pointer"
           >
-            <LogOut size={13} />
+            <LogOut size={12} />
             Logout
           </button>
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+      <main className="mx-auto max-w-7xl px-4 py-8 sm:py-10 sm:px-6 lg:px-8">
         
         {/* Navigation Tabs */}
-        <div className="flex border-b border-[#31170E]/10 mb-8 gap-6">
+        <div className="flex border-b border-[#31170E]/10 mb-8 gap-4 sm:gap-6 overflow-x-auto whitespace-nowrap scrollbar-none pb-px">
           <button
             onClick={() => setActiveTab('products')}
-            className={`flex items-center gap-2 border-b-2 px-1 py-4 text-xs font-bold uppercase tracking-widest cursor-pointer transition-colors ${
+            className={`flex items-center gap-2 border-b-2 px-1 py-4 text-xs font-bold uppercase tracking-widest cursor-pointer transition-colors flex-shrink-0 ${
               activeTab === 'products' 
                 ? 'border-[#31170E] text-[#31170E]' 
                 : 'border-transparent text-neutral-400 hover:text-neutral-600'
@@ -334,7 +334,7 @@ export default function AdminDashboard() {
           
           <button
             onClick={() => setActiveTab('orders')}
-            className={`flex items-center gap-2 border-b-2 px-1 py-4 text-xs font-bold uppercase tracking-widest cursor-pointer transition-colors ${
+            className={`flex items-center gap-2 border-b-2 px-1 py-4 text-xs font-bold uppercase tracking-widest cursor-pointer transition-colors flex-shrink-0 ${
               activeTab === 'orders' 
                 ? 'border-[#31170E] text-[#31170E]' 
                 : 'border-transparent text-neutral-400 hover:text-neutral-600'
@@ -349,7 +349,7 @@ export default function AdminDashboard() {
         {activeTab === 'products' ? (
           <div>
             {/* Catalog Controls */}
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div>
                 <h2 className="font-serif text-xl font-bold">Manage Products</h2>
                 <p className="text-xs text-neutral-500 mt-1">Add, update, or remove items in the showcase catalog.</p>
@@ -357,7 +357,7 @@ export default function AdminDashboard() {
               
               <button
                 onClick={handleNewProduct}
-                className="flex items-center gap-2 rounded-full bg-[#31170E] px-6 py-3 text-xs font-bold uppercase tracking-wider text-[#fdf9f4] shadow hover:bg-[#6b4335] transition-all cursor-pointer"
+                className="flex items-center justify-center gap-2 rounded-full bg-[#31170E] px-6 py-3 text-xs font-bold uppercase tracking-wider text-[#fdf9f4] shadow hover:bg-[#6b4335] transition-all cursor-pointer w-full sm:w-auto"
               >
                 <Plus size={14} />
                 Add Product
@@ -379,24 +379,24 @@ export default function AdminDashboard() {
                 </button>
               </div>
             ) : (
-              <div className="overflow-hidden rounded-2xl border border-neutral-100 bg-white shadow-sm">
-                <table className="min-w-full divide-y divide-neutral-100 text-left text-sm">
+              <div className="overflow-x-auto w-full rounded-2xl border border-neutral-100 bg-white shadow-sm">
+                <table className="min-w-[800px] md:min-w-full divide-y divide-neutral-100 text-left text-sm">
                   <thead className="bg-neutral-55 text-xs font-bold uppercase tracking-wider text-[#31170E]/70">
                     <tr>
-                      <th className="px-6 py-4">Product</th>
-                      <th className="px-6 py-4">Category</th>
-                      <th className="px-6 py-4">Price</th>
-                      <th className="px-6 py-4">Colors</th>
-                      <th className="px-6 py-4">Badge</th>
-                      <th className="px-6 py-4 text-right">Actions</th>
+                      <th className="px-4 py-3 md:px-6 md:py-4">Product</th>
+                      <th className="px-4 py-3 md:px-6 md:py-4 hidden sm:table-cell">Category</th>
+                      <th className="px-4 py-3 md:px-6 md:py-4">Price</th>
+                      <th className="px-4 py-3 md:px-6 md:py-4 hidden md:table-cell">Colors</th>
+                      <th className="px-4 py-3 md:px-6 md:py-4 hidden sm:table-cell">Badge</th>
+                      <th className="px-4 py-3 md:px-6 md:py-4 text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-neutral-100 font-medium text-neutral-600">
                     {products.map((prod) => (
                       <tr key={prod.id} className="hover:bg-neutral-50/50 transition-colors">
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-4">
-                            <div className="h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-[#fdf9f4] border border-neutral-100 overflow-hidden flex">
+                        <td className="px-4 py-3 md:px-6 md:py-4">
+                          <div className="flex items-center gap-3 md:gap-4">
+                            <div className="h-10 w-10 md:h-12 md:w-12 flex-shrink-0 items-center justify-center rounded-lg bg-[#fdf9f4] border border-neutral-100 overflow-hidden flex">
                               {prod.imageUrl ? (
                                 <img src={prod.imageUrl} alt={prod.name} className="h-full w-full object-cover" />
                               ) : (
@@ -404,17 +404,28 @@ export default function AdminDashboard() {
                               )}
                             </div>
                             <div>
-                              <div className="font-semibold text-[#31170E]">{prod.name}</div>
-                              <div className="text-[11px] text-neutral-400 mt-0.5 line-clamp-1 max-w-xs font-normal">{prod.description}</div>
+                              <div className="font-semibold text-[#31170E] text-xs md:text-sm">{prod.name}</div>
+                              <div className="text-[10px] md:text-[11px] text-neutral-400 mt-0.5 line-clamp-1 max-w-[150px] sm:max-w-xs font-normal">{prod.description}</div>
+                              {/* Mobile indicators */}
+                              <div className="flex flex-wrap items-center gap-1.5 mt-1 sm:hidden">
+                                <span className="rounded bg-[#31170E]/5 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#31170E]">
+                                  {prod.category}
+                                </span>
+                                {prod.badge && (
+                                  <span className="rounded bg-amber-500/10 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-amber-700">
+                                    {prod.badge}
+                                  </span>
+                                )}
+                              </div>
                             </div>
                           </div>
                         </td>
-                        <td className="px-6 py-4 text-xs font-bold uppercase tracking-wider">{prod.category}</td>
-                        <td className="px-6 py-4 font-serif">
+                        <td className="px-4 py-3 md:px-6 md:py-4 text-xs font-bold uppercase tracking-wider hidden sm:table-cell">{prod.category}</td>
+                        <td className="px-4 py-3 md:px-6 md:py-4 font-serif text-xs md:text-sm">
                           <div>₹{prod.price}</div>
-                          {prod.originalPrice && <div className="text-xs text-neutral-400 line-through mt-0.5">₹{prod.originalPrice}</div>}
+                          {prod.originalPrice && <div className="text-[10px] md:text-xs text-neutral-400 line-through mt-0.5">₹{prod.originalPrice}</div>}
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="px-4 py-3 md:px-6 md:py-4 hidden md:table-cell">
                           <div className="flex flex-wrap gap-1.5 max-w-xs">
                             {prod.colors && prod.colors.map((c, i) => (
                               <span 
@@ -429,7 +440,7 @@ export default function AdminDashboard() {
                             {(!prod.colors || prod.colors.length === 0) && <span className="text-xs text-neutral-400 font-normal italic">No colors</span>}
                           </div>
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="px-4 py-3 md:px-6 md:py-4 hidden sm:table-cell">
                           {prod.badge ? (
                             <span className="rounded bg-[#31170E]/5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#31170E]">
                               {prod.badge}
@@ -438,21 +449,21 @@ export default function AdminDashboard() {
                             <span className="text-neutral-300">-</span>
                           )}
                         </td>
-                        <td className="px-6 py-4 text-right">
-                          <div className="flex justify-end gap-2">
+                        <td className="px-4 py-3 md:px-6 md:py-4 text-right">
+                          <div className="flex justify-end gap-1 md:gap-2">
                             <button
                               onClick={() => handleEditProduct(prod)}
-                              className="rounded-lg p-2 text-neutral-400 hover:bg-[#31170E]/5 hover:text-[#31170E] transition-colors cursor-pointer"
+                              className="rounded-lg p-1.5 md:p-2 text-neutral-400 hover:bg-[#31170E]/5 hover:text-[#31170E] transition-colors cursor-pointer"
                               aria-label="Edit product"
                             >
-                              <Edit2 size={15} />
+                              <Edit2 size={14} />
                             </button>
                             <button
                               onClick={() => handleDeleteProduct(prod.id)}
-                              className="rounded-lg p-2 text-neutral-400 hover:bg-red-50 hover:text-red-600 transition-colors cursor-pointer"
+                              className="rounded-lg p-1.5 md:p-2 text-neutral-400 hover:bg-red-50 hover:text-red-600 transition-colors cursor-pointer"
                               aria-label="Delete product"
                             >
-                              <Trash2 size={15} />
+                              <Trash2 size={14} />
                             </button>
                           </div>
                         </td>
@@ -480,16 +491,16 @@ export default function AdminDashboard() {
                 <p className="text-sm text-neutral-500 mt-2">Leads will show up here automatically when customers check out.</p>
               </div>
             ) : (
-              <div className="overflow-hidden rounded-2xl border border-neutral-100 bg-white shadow-sm">
-                <table className="min-w-full divide-y divide-neutral-100 text-left text-sm">
+              <div className="overflow-x-auto w-full rounded-2xl border border-neutral-100 bg-white shadow-sm">
+                <table className="min-w-[800px] md:min-w-full divide-y divide-neutral-100 text-left text-sm">
                   <thead className="bg-neutral-55 text-xs font-bold uppercase tracking-wider text-[#31170E]/70">
                     <tr>
-                      <th className="px-6 py-4">Customer</th>
-                      <th className="px-6 py-4">Contact</th>
-                      <th className="px-6 py-4">Total Amount</th>
-                      <th className="px-6 py-4">Ordered Items Count</th>
-                      <th className="px-6 py-4">Date</th>
-                      <th className="px-6 py-4 text-right">Details</th>
+                      <th className="px-4 py-3 md:px-6 md:py-4">Customer</th>
+                      <th className="px-4 py-3 md:px-6 md:py-4">Contact</th>
+                      <th className="px-4 py-3 md:px-6 md:py-4">Total Amount</th>
+                      <th className="px-4 py-3 md:px-6 md:py-4 hidden sm:table-cell">Ordered Items Count</th>
+                      <th className="px-4 py-3 md:px-6 md:py-4 hidden md:table-cell">Date</th>
+                      <th className="px-4 py-3 md:px-6 md:py-4 text-right">Details</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-neutral-100 font-medium text-neutral-600">
@@ -504,24 +515,46 @@ export default function AdminDashboard() {
                       
                       return (
                         <tr key={order.id} className="hover:bg-neutral-50/50 transition-colors">
-                          <td className="px-6 py-4 font-semibold text-[#31170E]">{order.customerName}</td>
-                          <td className="px-6 py-4">
+                          <td className="px-4 py-3 md:px-6 md:py-4">
+                            <div className="font-semibold text-[#31170E] text-xs md:text-sm">{order.customerName}</div>
+                            {/* Mobile helper details */}
+                            <div className="flex flex-col gap-0.5 mt-1 sm:hidden">
+                              <span className="text-[10px] text-neutral-500 font-normal">{totalItems} items</span>
+                              <span className="text-[10px] text-neutral-400 font-normal">
+                                {new Date(order.createdAt).toLocaleDateString(undefined, {
+                                  month: 'short',
+                                  day: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
+                              </span>
+                            </div>
+                            <div className="hidden sm:block md:hidden text-[10px] text-neutral-400 font-normal mt-0.5">
+                              {new Date(order.createdAt).toLocaleDateString(undefined, {
+                                month: 'short',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </div>
+                          </td>
+                          <td className="px-4 py-3 md:px-6 md:py-4">
                             <div className="flex flex-col gap-0.5 text-xs font-sans font-normal">
                               <span className="flex items-center gap-1 font-semibold text-[#31170E]/80">
-                                <Phone size={11} />
-                                {order.customerPhone}
+                                <Phone size={11} className="flex-shrink-0" />
+                                <span className="truncate max-w-[120px] sm:max-w-none">{order.customerPhone}</span>
                               </span>
                               {order.customerEmail && (
                                 <span className="flex items-center gap-1 text-neutral-400">
-                                  <Mail size={11} />
-                                  {order.customerEmail}
+                                  <Mail size={11} className="flex-shrink-0" />
+                                  <span className="truncate max-w-[120px] sm:max-w-none">{order.customerEmail}</span>
                                 </span>
                               )}
                             </div>
                           </td>
-                          <td className="px-6 py-4 font-serif font-bold text-[#31170E]">₹{order.totalAmount.toLocaleString()}</td>
-                          <td className="px-6 py-4 text-neutral-500 font-normal">{totalItems} items</td>
-                          <td className="px-6 py-4 text-xs font-normal text-neutral-400">
+                          <td className="px-4 py-3 md:px-6 md:py-4 font-serif font-bold text-xs md:text-sm text-[#31170E]">₹{order.totalAmount.toLocaleString()}</td>
+                          <td className="px-4 py-3 md:px-6 md:py-4 text-neutral-500 font-normal hidden sm:table-cell">{totalItems} items</td>
+                          <td className="px-4 py-3 md:px-6 md:py-4 text-xs font-normal text-neutral-400 hidden md:table-cell">
                             {new Date(order.createdAt).toLocaleDateString(undefined, {
                               year: 'numeric',
                               month: 'short',
@@ -530,10 +563,10 @@ export default function AdminDashboard() {
                               minute: '2-digit'
                             })}
                           </td>
-                          <td className="px-6 py-4 text-right">
+                          <td className="px-4 py-3 md:px-6 md:py-4 text-right">
                             <button
                               onClick={() => setSelectedOrder(order)}
-                              className="rounded-full bg-[#31170E]/5 hover:bg-[#31170E] px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#31170E] hover:text-[#fdf9f4] transition-all cursor-pointer"
+                              className="rounded-full bg-[#31170E]/5 hover:bg-[#31170E] px-3 py-1.5 md:px-4 md:py-1.5 text-[10px] md:text-xs font-bold uppercase tracking-wider text-[#31170E] hover:text-[#fdf9f4] transition-all cursor-pointer whitespace-nowrap"
                             >
                               View Items
                             </button>
@@ -565,16 +598,16 @@ export default function AdminDashboard() {
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className="relative z-10 w-full max-w-2xl overflow-y-auto max-h-[90vh] rounded-3xl border border-[#31170E]/10 bg-[#fdf9f4] p-6 shadow-2xl md:p-8"
+              className="relative z-10 w-full max-w-2xl overflow-y-auto max-h-[90vh] rounded-3xl border border-[#31170E]/10 bg-[#fdf9f4] p-5 sm:p-6 md:p-8 shadow-2xl"
             >
               <button
                 onClick={() => setIsProductModalOpen(false)}
-                className="absolute right-6 top-6 rounded-full p-1.5 text-neutral-400 hover:bg-neutral-100 hover:text-black cursor-pointer"
+                className="absolute right-4 top-4 sm:right-6 sm:top-6 rounded-full p-1.5 text-neutral-400 hover:bg-neutral-100 hover:text-black cursor-pointer"
               >
                 <X size={20} />
               </button>
 
-              <h3 className="font-serif text-2xl font-bold mb-6">
+              <h3 className="font-serif text-xl sm:text-2xl font-bold mb-6 pr-6">
                 {editingProduct ? 'Edit Catalog Piece' : 'Add New Showcase Piece'}
               </h3>
 
@@ -831,16 +864,16 @@ export default function AdminDashboard() {
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className="relative z-10 w-full max-w-lg overflow-y-auto max-h-[85vh] rounded-3xl border border-[#31170E]/10 bg-[#fdf9f4] p-6 shadow-2xl md:p-8"
+              className="relative z-10 w-full max-w-lg overflow-y-auto max-h-[85vh] rounded-3xl border border-[#31170E]/10 bg-[#fdf9f4] p-5 sm:p-6 md:p-8 shadow-2xl"
             >
               <button
                 onClick={() => setSelectedOrder(null)}
-                className="absolute right-6 top-6 rounded-full p-1.5 text-neutral-400 hover:bg-neutral-100 hover:text-black cursor-pointer"
+                className="absolute right-4 top-4 sm:right-6 sm:top-6 rounded-full p-1.5 text-neutral-400 hover:bg-neutral-100 hover:text-black cursor-pointer"
               >
                 <X size={20} />
               </button>
 
-              <h3 className="font-serif text-xl font-bold mb-1">Lead Details</h3>
+              <h3 className="font-serif text-lg sm:text-xl font-bold mb-1 pr-6">Lead Details</h3>
               <p className="text-xs text-neutral-400 font-semibold uppercase tracking-wider mb-6">Order ID: {selectedOrder.id}</p>
 
               {/* Customer summary */}
