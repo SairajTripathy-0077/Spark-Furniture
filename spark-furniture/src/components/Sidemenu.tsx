@@ -30,10 +30,10 @@ const Sidemenu:FC<SidemenuProps> = ({isOpen, onClose}) => {
                     <button onClick={onClose} className='px-4 py-2 bg-gray-200 rounded hover:bg-gray-300'>x</button>
                 </div>
                 <ul className='space-y-2'>
-                    <li><Link href="/" className='block px-4 py-2 hover:bg-gray-200 rounded'>Home</Link></li>
-                    <li><Link href="/shop" className='block px-4 py-2 hover:bg-gray-200 rounded'>Shop</Link></li>
-                    <li><Link href="/about" className='block px-4 py-2 hover:bg-gray-200 rounded'>About Us</Link></li>
-                    <li><Link href="/contact" className='block px-4 py-2 hover:bg-gray-200 rounded'>Contact</Link></li>
+                    <li><Link href="/" onClick={onClose} className='block px-4 py-2 hover:bg-gray-200 rounded'>Home</Link></li>
+                    <li><Link href="/products" onClick={onClose} className='block px-4 py-2 hover:bg-gray-200 rounded'>Shop</Link></li>
+                    <li><Link href="/about" onClick={onClose} className='block px-4 py-2 hover:bg-gray-200 rounded'>About Us</Link></li>
+                    <li><Link href="/contact" onClick={onClose} className='block px-4 py-2 hover:bg-gray-200 rounded'>Contact</Link></li>
                 </ul>
             </div>
         </motion.div>

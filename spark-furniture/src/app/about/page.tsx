@@ -8,8 +8,8 @@ import Container from '@/components/Container';
 export default function AboutPage() {
   const directors = [
     { name: 'Hemanta Kumar Behera', role: 'Managing Director', bio: 'Over a decade of industry expertise guiding design innovation and strategic operations.' },
-    { name: 'Sudhansubala Behera', role: 'Director', bio: 'Directing retail expansions, warehouse operations, and quality management protocols.' },
     { name: 'Sadananda Behera', role: 'Director', bio: 'Managing corporate accounts, client relations, and public institution developments.' },
+    { name: 'Pratima Behera', role: 'Director', bio: 'Directing retail expansions, warehouse operations, and quality management protocols.' },
   ];
 
   const coreCertifications = [
@@ -160,12 +160,8 @@ export default function AboutPage() {
               >
                 <div className="space-y-4 flex flex-col items-center">
                   {/* Photo Placeholder Container */}
-                  <div className="h-28 w-28 rounded-full bg-neutral-50 border border-neutral-200/50 flex items-center justify-center text-neutral-400 relative overflow-hidden group shadow-inner">
+                  <div className="h-28 w-28 rounded-full bg-neutral-50 border border-neutral-200/50 flex items-center justify-center text-neutral-400 relative overflow-hidden shadow-inner">
                     <User size={40} className="text-[#31170E]/20" />
-                    {/* Visual overlay instructions for the user/developer */}
-                    <div className="absolute inset-0 bg-[#31170E]/50 opacity-0 hover:opacity-100 transition-opacity duration-200 flex items-center justify-center text-[10px] text-[#fdf9f4] font-semibold uppercase tracking-wider text-center p-2">
-                      Replace with Photo
-                    </div>
                   </div>
                   <div>
                     <h3 className="font-sans text-lg font-bold text-[#31170E]">
