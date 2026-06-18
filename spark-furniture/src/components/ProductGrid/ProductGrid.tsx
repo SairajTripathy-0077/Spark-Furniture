@@ -6,6 +6,7 @@ import { Search, ChevronDown, SlidersHorizontal, RotateCcw, Heart } from 'lucide
 import Container from '../Container';
 import ProductCard, { Product } from './ProductCard';
 import ProductQuickView from './ProductQuickView';
+import { useFavorites } from '@/context/FavoritesContext';
 
 const productsData: Product[] = [];
 
@@ -21,19 +22,10 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ hideHeader = false }) 
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('featured');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [wishlistedIds, setWishlistedIds] = useState<string[]>([]);
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
+  const { favorites, isFavorite, toggleFavorite } = useFavorites();
 
   useEffect(() => {
-    const saved = localStorage.getItem('spark_wishlist');
-    if (saved) {
-      try {
-        setWishlistedIds(JSON.parse(saved));
-      } catch (e) {
-        console.error('Failed to parse wishlist from localStorage', e);
-      }
-    }
-
     // Read client-side URL query parameters to toggle favorites
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
@@ -42,14 +34,6 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ hideHeader = false }) 
       }
     }
   }, []);
-
-  const toggleWishlist = (id: string) => {
-    setWishlistedIds((prev) => {
-      const next = prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id];
-      localStorage.setItem('spark_wishlist', JSON.stringify(next));
-      return next;
-    });
-  };
 
   useEffect(() => {
     async function loadProducts() {
@@ -93,7 +77,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ hideHeader = false }) 
 
     // Filter by Favorites
     if (showOnlyFavorites) {
-      result = result.filter((product) => wishlistedIds.includes(product.id));
+      result = result.filter((product) => isFavorite(product.id));
     }
 
     // Sort
@@ -104,7 +88,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ hideHeader = false }) 
     }
 
     return result;
-  }, [products, selectedCategory, searchQuery, sortBy, wishlistedIds, showOnlyFavorites]);
+  }, [products, selectedCategory, searchQuery, sortBy, favorites, showOnlyFavorites, isFavorite]);
 
   const resetFilters = () => {
     setSelectedCategory('All');
@@ -193,8 +177,8 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ hideHeader = false }) 
                   key={product.id}
                   product={product}
                   onQuickView={setSelectedProduct}
-                  isWishlisted={wishlistedIds.includes(product.id)}
-                  onToggleWishlist={() => toggleWishlist(product.id)}
+                  isWishlisted={isFavorite(product.id)}
+                  onToggleWishlist={() => toggleFavorite(product)}
                 />
               ))
             ) : products.length === 0 ? (
