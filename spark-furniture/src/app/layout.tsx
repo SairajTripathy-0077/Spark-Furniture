@@ -79,6 +79,52 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        {/* JSON-LD Local Business Structured Data for Google SEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FurnitureStore",
+              "name": "Spark Furnitures",
+              "image": "https://www.sparkfurnitures.in/logo.png",
+              "@id": "https://www.sparkfurnitures.in/#organization",
+              "url": "https://www.sparkfurnitures.in",
+              "telephone": "+919777915706",
+              "priceRange": "₹₹",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "492, Service Road south, Dumduma, Beside NH-5, Near Khandagiri Petrol Pump",
+                "addressLocality": "Bhubaneswar",
+                "addressRegion": "Odisha",
+                "postalCode": "751019",
+                "addressCountry": "IN"
+              },
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": 20.252064,
+                "longitude": 85.776632
+              },
+              "openingHoursSpecification": {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": [
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday",
+                  "Saturday",
+                  "Sunday"
+                ],
+                "opens": "09:00",
+                "closes": "22:00"
+              },
+              "sameAs": [
+                "https://www.instagram.com/sparkfurniture"
+              ]
+            })
+          }}
+        />
         <CartProvider>
           <FavoritesProvider>
             <Header/>
