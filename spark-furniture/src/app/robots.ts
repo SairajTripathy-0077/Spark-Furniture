@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/admin', '/api'],
     },
-    sitemap: 'https://sparkfurnitures.in/sitemap.xml',
+    sitemap: 'https://www.sparkfurnitures.in/sitemap.xml',
   };
 }

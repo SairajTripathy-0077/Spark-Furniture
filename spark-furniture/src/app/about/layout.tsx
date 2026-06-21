@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'About Us | Spark Furnitures',
     description: 'Learn about our 14+ years of furniture design excellence, ISO certified quality standards, leadership board, and corporate clients in Bhubaneswar, Odisha.',
-    url: 'https://sparkfurnitures.in/about',
+    url: 'https://www.sparkfurnitures.in/about',
   },
 };
 

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Contact Us | Spark Furnitures Bhubaneswar',
     description: 'Find our showroom address, phone number, email contact, and send custom design inquiries directly to us on WhatsApp.',
-    url: 'https://sparkfurnitures.in/contact',
+    url: 'https://www.sparkfurnitures.in/contact',
   },
 };
 

@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://sparkfurnitures.in"),
+  metadataBase: new URL("https://www.sparkfurnitures.in"),
   title: {
     default: "Spark Furnitures | Premium Custom Furniture in Bhubaneswar, Odisha",
     template: "%s | Spark Furnitures",
