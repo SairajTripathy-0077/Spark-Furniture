@@ -55,11 +55,14 @@ export async function POST(request: Request) {
     }
     
     const body = await request.json();
-    const { name, price, originalPrice, category, description, colors, imageType, imageUrl, badge } = body;
+    const { name, price, originalPrice, category, description, colors, imageType, imageUrl, imageUrls, badge } = body;
     
     if (!name || price === undefined || !category || !description) {
       return NextResponse.json({ success: false, message: 'Missing required fields' }, { status: 400 });
     }
+
+    const finalImageUrls = Array.isArray(imageUrls) ? imageUrls : (imageUrl ? [imageUrl] : []);
+    const finalImageUrl = finalImageUrls.length > 0 ? finalImageUrls[0] : null;
 
     const product = await prisma.product.create({
       data: {
@@ -70,7 +73,8 @@ export async function POST(request: Request) {
         description,
         colors: Array.isArray(colors) ? JSON.stringify(colors) : JSON.stringify([]),
         imageType: imageType || 'chair',
-        imageUrl: imageUrl || null,
+        imageUrl: finalImageUrl,
+        imageUrls: finalImageUrls,
         badge: badge || null,
         rating: 4.8, // default rating for new products
         reviewsCount: Math.floor(Math.random() * 20) + 1, // seed reviews count
@@ -94,10 +98,17 @@ export async function PUT(request: Request) {
     }
     
     const body = await request.json();
-    const { id, name, price, originalPrice, category, description, colors, imageType, imageUrl, badge } = body;
+    const { id, name, price, originalPrice, category, description, colors, imageType, imageUrl, imageUrls, badge } = body;
     
     if (!id) {
       return NextResponse.json({ success: false, message: 'Product ID is required' }, { status: 400 });
+    }
+
+    let finalImageUrl = imageUrl;
+    let finalImageUrls = imageUrls;
+    if (imageUrls !== undefined) {
+      finalImageUrls = Array.isArray(imageUrls) ? imageUrls : (imageUrl ? [imageUrl] : []);
+      finalImageUrl = finalImageUrls.length > 0 ? finalImageUrls[0] : null;
     }
 
     const updated = await prisma.product.update({
@@ -110,7 +121,8 @@ export async function PUT(request: Request) {
         description,
         colors: colors ? (Array.isArray(colors) ? JSON.stringify(colors) : colors) : undefined,
         imageType,
-        imageUrl,
+        imageUrl: finalImageUrl,
+        imageUrls: finalImageUrls,
         badge,
       }
     });

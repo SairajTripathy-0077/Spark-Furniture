@@ -26,6 +26,7 @@ interface Product {
   colors: ProductColor[];
   imageType: string;
   imageUrl: string | null;
+  imageUrls?: string[];
   badge: string | null;
 }
 
@@ -74,6 +75,7 @@ export default function AdminDashboard() {
   const [badge, setBadge] = useState('');
   const [imageType, setImageType] = useState('chair');
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
   
   // Color adding inputs
   const [colors, setColors] = useState<ProductColor[]>([]);
@@ -84,6 +86,30 @@ export default function AdminDashboard() {
   const [uploading, setUploading] = useState(false);
   const [formError, setFormError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+
+  const handleRemoveImage = (idx: number) => {
+    setImageUrls(prev => prev.filter((_, i) => i !== idx));
+  };
+
+  const handleMoveImage = (idx: number, direction: 'left' | 'right') => {
+    if (direction === 'left' && idx > 0) {
+      setImageUrls(prev => {
+        const next = [...prev];
+        const temp = next[idx];
+        next[idx] = next[idx - 1];
+        next[idx - 1] = temp;
+        return next;
+      });
+    } else if (direction === 'right' && idx < imageUrls.length - 1) {
+      setImageUrls(prev => {
+        const next = [...prev];
+        const temp = next[idx];
+        next[idx] = next[idx + 1];
+        next[idx + 1] = temp;
+        return next;
+      });
+    }
+  };
 
   const router = useRouter();
 
@@ -158,6 +184,7 @@ export default function AdminDashboard() {
     setBadge('');
     setImageType('chair');
     setImageUrl(null);
+    setImageUrls([]);
     setColors([]);
     setFormError('');
     setIsProductModalOpen(true);
@@ -174,6 +201,7 @@ export default function AdminDashboard() {
     setBadge(prod.badge || '');
     setImageType(prod.imageType);
     setImageUrl(prod.imageUrl);
+    setImageUrls(prod.imageUrls || (prod.imageUrl ? [prod.imageUrl] : []));
     setColors(prod.colors || []);
     setFormError('');
     setIsProductModalOpen(true);
@@ -197,26 +225,37 @@ export default function AdminDashboard() {
     setUploading(true);
     setFormError('');
     
-    const file = files[0];
-    const formData = new FormData();
-    formData.append('file', file);
-    
     try {
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData
-      });
+      const uploadedUrls: string[] = [];
+      let lastMsg = '';
       
-      const data = await res.json();
-      if (data.success) {
-        setImageUrl(data.url);
-        if (data.message) {
-          // Warning about mock setup
-          setSuccessMsg(data.message);
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        const res = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const data = await res.json();
+        if (data.success) {
+          uploadedUrls.push(data.url);
+          if (data.message) {
+            lastMsg = data.message;
+          }
+        } else {
+          setFormError(prev => (prev ? prev + ' | ' : '') + `Failed to upload ${file.name}: ${data.message}`);
+        }
+      }
+      
+      if (uploadedUrls.length > 0) {
+        setImageUrls(prev => [...prev, ...uploadedUrls]);
+        if (lastMsg) {
+          setSuccessMsg(lastMsg);
           setTimeout(() => setSuccessMsg(''), 4000);
         }
-      } else {
-        setFormError(data.message || 'Failed to upload image');
       }
     } catch (err) {
       setFormError('Error connecting to upload API');
@@ -244,7 +283,8 @@ export default function AdminDashboard() {
       description,
       colors,
       imageType,
-      imageUrl,
+      imageUrl: imageUrls[0] || null,
+      imageUrls,
       badge: badge || null
     };
     
@@ -729,50 +769,90 @@ export default function AdminDashboard() {
 
                 {/* Upload Image Section */}
                 <div className="space-y-2">
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#31170E]/70">Product Image (Cloudinary)</label>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#31170E]/70">
+                    Product Image Gallery (First image is the face of the product)
+                  </label>
                   
-                  <div className="flex flex-col md:flex-row gap-4 items-center">
-                    {/* Preview Area */}
-                    <div className="h-28 w-28 rounded-2xl border border-neutral-200 bg-white overflow-hidden flex-shrink-0 flex items-center justify-center relative shadow-sm">
-                      {imageUrl ? (
-                        <>
-                          <img src={imageUrl} alt="Upload preview" className="h-full w-full object-cover" />
-                          <button
-                            type="button"
-                            onClick={() => setImageUrl(null)}
-                            className="absolute top-1 right-1 rounded-full bg-black/60 p-1 text-white hover:bg-black transition-colors"
-                          >
-                            <X size={12} />
-                          </button>
-                        </>
-                      ) : (
-                        <div className="flex flex-col items-center text-neutral-300">
-                          <ImageIcon size={28} />
-                          <span className="text-[9px] font-bold uppercase tracking-wider mt-1.5">No Image</span>
+                  {/* Gallery Grid */}
+                  {imageUrls.length > 0 && (
+                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 p-3 bg-white rounded-2xl border border-neutral-100 shadow-inner">
+                      {imageUrls.map((url, index) => (
+                        <div key={url + '-' + index} className="group relative aspect-square rounded-xl border border-neutral-200 bg-neutral-50 overflow-hidden shadow-xs flex items-center justify-center">
+                          <img src={url} alt={`Gallery ${index}`} className="h-full w-full object-cover" />
+                          
+                          {/* Face Image Indicator */}
+                          {index === 0 ? (
+                            <div className="absolute top-1 left-1 bg-[#31170E] text-[#fdf9f4] text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md shadow">
+                              Face / Main
+                            </div>
+                          ) : (
+                            <div className="absolute top-1 left-1 bg-black/40 backdrop-blur-xs text-white text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md">
+                              #{index + 1}
+                            </div>
+                          )}
+                          
+                          {/* Action Overlay */}
+                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-1.5 transition-opacity duration-200">
+                            {/* Move Left */}
+                            {index > 0 && (
+                              <button
+                                type="button"
+                                onClick={() => handleMoveImage(index, 'left')}
+                                className="p-1 rounded-full bg-white/20 text-white hover:bg-white hover:text-black transition-colors cursor-pointer"
+                                title="Move Left"
+                              >
+                                <span className="text-[10px] font-bold leading-none">←</span>
+                              </button>
+                            )}
+                            
+                            {/* Delete */}
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveImage(index)}
+                              className="p-1 rounded-full bg-red-655/80 text-white hover:bg-red-600 transition-colors cursor-pointer"
+                              title="Remove image"
+                            >
+                              <Trash2 size={11} />
+                            </button>
+                            
+                            {/* Move Right */}
+                            {index < imageUrls.length - 1 && (
+                              <button
+                                type="button"
+                                onClick={() => handleMoveImage(index, 'right')}
+                                className="p-1 rounded-full bg-white/20 text-white hover:bg-white hover:text-black transition-colors cursor-pointer"
+                                title="Move Right"
+                              >
+                                <span className="text-[10px] font-bold leading-none">→</span>
+                              </button>
+                            )}
+                          </div>
                         </div>
-                      )}
+                      ))}
                     </div>
-                    
-                    {/* Drag-drop Trigger Box */}
-                    <div className="flex-1 w-full">
-                      <label className="flex flex-col items-center justify-center w-full h-28 border border-dashed border-[#31170E]/20 rounded-2xl cursor-pointer bg-white hover:bg-neutral-50 transition-colors py-4 px-6 text-center">
-                        <Upload size={20} className="text-neutral-400 mb-1" />
-                        <span className="text-xs font-semibold text-[#31170E]">
-                          {uploading ? 'Uploading to Cloudinary...' : 'Click to upload product image'}
-                        </span>
-                        <span className="text-[10px] text-neutral-400 mt-1 font-normal">Supports JPEG, PNG, WEBP</span>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          className="hidden"
-                          onChange={handleImageUpload}
-                          disabled={uploading}
-                        />
-                      </label>
-                    </div>
+                  )}
+                  
+                  {/* Upload Area */}
+                  <div className="w-full">
+                    <label className="flex flex-col items-center justify-center w-full h-24 border border-dashed border-[#31170E]/20 rounded-2xl cursor-pointer bg-white hover:bg-neutral-50 transition-colors py-4 px-6 text-center">
+                      <Upload size={20} className="text-neutral-400 mb-1" />
+                      <span className="text-xs font-semibold text-[#31170E]">
+                        {uploading ? 'Uploading to Cloudinary...' : 'Click to upload product image(s)'}
+                      </span>
+                      <span className="text-[10px] text-neutral-400 mt-1 font-normal">Supports multiple JPEGs, PNGs, WEBP</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        className="hidden"
+                        onChange={handleImageUpload}
+                        disabled={uploading}
+                      />
+                    </label>
                   </div>
+                  
                   {successMsg && (
-                    <div className="text-[10px] font-semibold text-amber-600 flex items-center gap-1 mt-1 bg-amber-50 px-2 py-1 rounded">
+                    <div className="text-[10px] font-semibold text-amber-600 flex items-center gap-1 mt-1 bg-amber-50 px-2 py-1 rounded w-fit">
                       <Check size={10} />
                       {successMsg}
                     </div>

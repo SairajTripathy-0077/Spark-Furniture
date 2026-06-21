@@ -19,6 +19,7 @@ model Product {
   colors        String   // JSON array of colors: [{"name":"...", "hex":"..."}]
   imageType     String?  // 'chair', 'table', 'sofa', 'lamp', 'storage' (used for default sketches)
   imageUrl      String?  // Uploaded image from Cloudinary
+  imageUrls     String[] @default([]) // Array of all uploaded images
   badge         String?  // 'Sale', 'New', 'Limited', etc.
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt

@@ -20,12 +20,14 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({ product, onC
     product?.colors && product.colors.length > 0 ? product.colors[0] : DEFAULT_COLOR
   );
   const [quantity, setQuantity] = useState(1);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   // Sync selected color when product changes
   useEffect(() => {
     if (product) {
       setSelectedColor(product.colors && product.colors.length > 0 ? product.colors[0] : DEFAULT_COLOR);
       setQuantity(1);
+      setActiveImageIndex(0);
     }
   }, [product]);
 
@@ -41,6 +43,10 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({ product, onC
   if (!product || !selectedColor) return null;
 
   const handleAddToCart = () => {
+    const mainImg = product.imageUrls && product.imageUrls.length > 0
+      ? product.imageUrls[0]
+      : (product.imageUrl || undefined);
+
     for (let i = 0; i < quantity; i++) {
       addToCart({
         id: product.id,
@@ -48,6 +54,7 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({ product, onC
         price: product.price,
         selectedColor: selectedColor ? selectedColor.hex : DEFAULT_COLOR.hex,
         imageType: product.imageType,
+        imageUrl: mainImg,
       });
     }
     onClose();
@@ -84,8 +91,14 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({ product, onC
 
           {/* Left Panel: Image Gallery */}
           <div className="w-full md:w-1/2 p-6 md:p-8 flex flex-col justify-center bg-white md:rounded-l-3xl border-b md:border-b-0 md:border-r border-neutral-100">
-            <div className="relative aspect-square w-full rounded-2xl overflow-hidden shadow-inner flex items-center justify-center">
-              {product.imageUrl ? (
+            <div className="relative aspect-square w-full rounded-2xl overflow-hidden shadow-inner flex items-center justify-center bg-[#fdf9f4]">
+              {product.imageUrls && product.imageUrls.length > 0 ? (
+                <img 
+                  src={product.imageUrls[activeImageIndex]} 
+                  alt={`${product.name} - View ${activeImageIndex + 1}`} 
+                  className="h-full w-full object-cover" 
+                />
+              ) : product.imageUrl ? (
                 <img src={product.imageUrl} alt={product.name} className="h-full w-full object-cover" />
               ) : (
                 <FurnitureSketch type={product.imageType} className="h-full w-full" />
@@ -97,30 +110,35 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({ product, onC
               )}
             </div>
             
-            {/* Visual sketch gallery tabs (purely decorative/premium aesthetic) */}
-            <div className="flex gap-3 mt-4 justify-center">
-              <div className="h-14 w-14 rounded-lg border border-[#31170E] p-0.5 cursor-pointer overflow-hidden flex items-center justify-center bg-[#fdf9f4]">
-                {product.imageUrl ? (
-                  <img src={product.imageUrl} alt="Thumbnail 1" className="h-full w-full object-cover rounded-md" />
-                ) : (
-                  <FurnitureSketch type={product.imageType} className="h-full w-full rounded-md" />
-                )}
+            {/* Thumbnail gallery */}
+            {(product.imageUrls && product.imageUrls.length > 0) ? (
+              <div className="flex flex-wrap gap-2.5 mt-4 justify-center max-h-20 overflow-y-auto py-1">
+                {product.imageUrls.map((url, idx) => (
+                  <button
+                     key={url + '-' + idx}
+                     onClick={() => setActiveImageIndex(idx)}
+                     className={`h-14 w-14 rounded-lg p-0.5 cursor-pointer overflow-hidden flex items-center justify-center bg-[#fdf9f4] transition-all border ${
+                       activeImageIndex === idx 
+                         ? 'border-[#31170E] shadow-sm scale-102 opacity-100' 
+                         : 'border-neutral-200/60 opacity-60 hover:opacity-100 hover:border-neutral-300'
+                     }`}
+                     aria-label={`View image ${idx + 1}`}
+                  >
+                    <img src={url} alt={`${product.name} thumbnail ${idx + 1}`} className="h-full w-full object-cover rounded-md" />
+                  </button>
+                ))}
               </div>
-              <div className="h-14 w-14 rounded-lg border border-transparent hover:border-neutral-200 p-0.5 opacity-60 cursor-pointer overflow-hidden flex items-center justify-center bg-[#fdf9f4]">
-                {product.imageUrl ? (
-                  <img src={product.imageUrl} alt="Thumbnail 2" className="h-full w-full object-cover rounded-md grayscale" />
-                ) : (
-                  <FurnitureSketch type={product.imageType} className="h-full w-full rounded-md grayscale" />
-                )}
+            ) : (
+              <div className="flex gap-3 mt-4 justify-center">
+                <div className="h-14 w-14 rounded-lg border border-[#31170E] p-0.5 cursor-pointer overflow-hidden flex items-center justify-center bg-[#fdf9f4]">
+                  {product.imageUrl ? (
+                    <img src={product.imageUrl} alt="Thumbnail 1" className="h-full w-full object-cover rounded-md" />
+                  ) : (
+                    <FurnitureSketch type={product.imageType} className="h-full w-full rounded-md" />
+                  )}
+                </div>
               </div>
-              <div className="h-14 w-14 rounded-lg border border-transparent hover:border-neutral-200 p-0.5 opacity-60 cursor-pointer overflow-hidden flex items-center justify-center bg-[#fdf9f4]">
-                {product.imageUrl ? (
-                  <img src={product.imageUrl} alt="Thumbnail 3" className="h-full w-full object-cover rounded-md sepia" />
-                ) : (
-                  <FurnitureSketch type={product.imageType} className="h-full w-full rounded-md sepia" />
-                )}
-              </div>
-            </div>
+            )}
           </div>
 
           {/* Right Panel: Content Details */}

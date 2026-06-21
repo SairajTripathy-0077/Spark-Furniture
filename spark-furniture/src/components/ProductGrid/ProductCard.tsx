@@ -19,6 +19,7 @@ export interface Product {
   imageType: 'chair' | 'table' | 'sofa' | 'lamp' | 'storage';
   badge?: 'New' | 'Sale' | 'Limited';
   imageUrl?: string | null;
+  imageUrls?: string[];
 }
 
 interface ProductCardProps {
