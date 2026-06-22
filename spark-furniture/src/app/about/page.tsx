@@ -65,7 +65,7 @@ export default function AboutPage() {
             transition={{ delay: 0.1 }}
             className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"
           >
-            Spark Furnitures
+            Spark Furniture
           </motion.h1>
           <motion.p
             initial={{ opacity: 0 }}

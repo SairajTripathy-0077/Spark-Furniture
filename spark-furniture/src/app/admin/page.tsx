@@ -8,6 +8,7 @@ import {
   Tag, List, User, Phone, Mail, Calendar, DollarSign, MapPin, 
   X, Check, AlertCircle, Image as ImageIcon 
 } from 'lucide-react';
+import imageCompression from 'browser-image-compression';
 
 interface ProductColor {
   name: string;
@@ -229,15 +230,43 @@ export default function AdminDashboard() {
       const uploadedUrls: string[] = [];
       let lastMsg = '';
       
+      const compressionOptions = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
+      };
+      
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
+        let fileToUpload = file;
+        
+        // Apply compression only for image files
+        if (file.type.startsWith('image/')) {
+          try {
+            fileToUpload = await imageCompression(file, compressionOptions);
+          } catch (compErr) {
+            console.warn(`Compression failed for ${file.name}, uploading original file:`, compErr);
+          }
+        }
+        
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append('file', fileToUpload);
         
         const res = await fetch('/api/upload', {
           method: 'POST',
           body: formData
         });
+        
+        if (!res.ok) {
+          const text = await res.text();
+          let msg = `${res.status} ${res.statusText}`;
+          try {
+            const data = JSON.parse(text);
+            msg = data.message || msg;
+          } catch (_) {}
+          setFormError(prev => (prev ? prev + ' | ' : '') + `Failed to upload ${file.name}: ${msg}`);
+          continue;
+        }
         
         const data = await res.json();
         if (data.success) {
@@ -257,8 +286,9 @@ export default function AdminDashboard() {
           setTimeout(() => setSuccessMsg(''), 4000);
         }
       }
-    } catch (err) {
-      setFormError('Error connecting to upload API');
+    } catch (err: any) {
+      console.error('Image upload connection error:', err);
+      setFormError(`Error connecting to upload API: ${err.message || 'Connection failed'}`);
     } finally {
       setUploading(false);
     }
@@ -837,7 +867,7 @@ export default function AdminDashboard() {
                     <label className="flex flex-col items-center justify-center w-full h-24 border border-dashed border-[#31170E]/20 rounded-2xl cursor-pointer bg-white hover:bg-neutral-50 transition-colors py-4 px-6 text-center">
                       <Upload size={20} className="text-neutral-400 mb-1" />
                       <span className="text-xs font-semibold text-[#31170E]">
-                        {uploading ? 'Uploading to Cloudinary...' : 'Click to upload product image(s)'}
+                        {uploading ? 'Compressing & uploading...' : 'Click to upload product image(s)'}
                       </span>
                       <span className="text-[10px] text-neutral-400 mt-1 font-normal">Supports multiple JPEGs, PNGs, WEBP</span>
                       <input

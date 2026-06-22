@@ -21,11 +21,15 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.sparkfurnitures.in"),
   title: {
-    default: "Spark Furnitures | Premium Custom Furniture in Bhubaneswar, Odisha",
-    template: "%s | Spark Furnitures",
+    default: "Spark Furniture | Premium Custom Furniture in Bhubaneswar, Odisha",
+    template: "%s | Spark Furniture",
   },
-  description: "Spark Furnitures is Odisha's leading ISO-certified manufacturer of luxury office chairs, executive desks, modular workstations, custom wooden sofas, premium beds, and home interior decor.",
+  description: "Spark Furniture (also known as Spark Furnitures) is Odisha's leading ISO-certified manufacturer of luxury office chairs, executive desks, modular workstations, custom wooden sofas, premium beds, and home interior decor.",
   keywords: [
+    "spark furniture",
+    "spark furnitures",
+    "spark furniture bhubaneswar",
+    "spark furnitures bhubaneswar",
     "furniture store bhubaneswar",
     "office furniture odisha",
     "custom modular furniture",
@@ -40,16 +44,16 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "Spark Furnitures | Premium Custom Furniture in Bhubaneswar, Odisha",
-    description: "ISO-certified manufacturer of luxury office chairs, modular office workstations, wooden sofas, custom beds, and modular home furniture.",
+    title: "Spark Furniture | Premium Custom Furniture in Bhubaneswar, Odisha",
+    description: "ISO-certified manufacturer of luxury office chairs, modular office workstations, wooden sofas, custom beds, and modular home furniture. Spark Furniture (Spark Furnitures) in Bhubaneswar, Odisha.",
     url: "https://sparkfurnitures.in",
-    siteName: "Spark Furnitures",
+    siteName: "Spark Furniture",
     images: [
       {
         url: "/hero.png",
         width: 1200,
         height: 500,
-        alt: "Spark Furnitures Luxury Showroom Hero",
+        alt: "Spark Furniture Luxury Showroom Hero",
       },
     ],
     locale: "en_IN",
@@ -86,7 +90,9 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "FurnitureStore",
-              "name": "Spark Furnitures",
+              "name": "Spark Furniture",
+              "alternateName": "Spark Furnitures",
+              "legalName": "Spark Furnitures Pvt Ltd",
               "image": "https://www.sparkfurnitures.in/logo.png",
               "@id": "https://www.sparkfurnitures.in/#organization",
               "url": "https://www.sparkfurnitures.in",

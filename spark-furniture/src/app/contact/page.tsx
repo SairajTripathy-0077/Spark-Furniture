@@ -65,7 +65,8 @@ ${formData.message}`;
                   <div>
                     <h4 className="font-bold text-neutral-500 text-xs uppercase tracking-wider">Address</h4>
                     <p className="mt-1 text-neutral-700 leading-relaxed font-medium">
-                      M/s Spark Furnitures Pvt Ltd<br />
+                      Spark Furniture<br />
+                      <span className="text-xs text-neutral-500 font-normal">(M/s Spark Furnitures Pvt Ltd)</span><br />
                       492, Service Road south, Dumduma,<br />
                       Beside NH-5, Near Khandagiri Petrol Pump,<br />
                       Bhubaneswar - 751019, Odisha
