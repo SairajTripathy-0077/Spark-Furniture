@@ -48,6 +48,22 @@ ${formData.message}`;
           </p>
         </div>
 
+        {/* Showroom Map on Top */}
+        <div className="bg-white p-4 rounded-3xl border border-neutral-100 shadow-sm overflow-hidden">
+          <div className="rounded-2xl overflow-hidden h-[300px] sm:h-[400px] relative w-full border border-neutral-100">
+            <iframe 
+              src="https://maps.google.com/maps?q=Spark%20Furniture,%20Dumduma,%20Bhubaneswar&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+              width="100%" 
+              height="100%" 
+              style={{ border: 0 }} 
+              allowFullScreen 
+              loading="lazy" 
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Spark Furniture Showroom Location"
+            />
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* Left: Contact Info */}

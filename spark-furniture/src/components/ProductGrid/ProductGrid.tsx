@@ -98,7 +98,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ hideHeader = false }) 
   };
 
   return (
-    <section className="py-16 bg-[#fdf9f4]">
+    <section className={`${hideHeader ? 'pt-2 pb-16' : 'py-16'} bg-[#fdf9f4]`}>
       <Container>
 
 
