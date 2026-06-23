@@ -232,20 +232,25 @@ export default function AdminDashboard() {
       
       const compressionOptions = {
         maxSizeMB: 1,
-        maxWidthOrHeight: 1920,
+        maxWidthOrHeight: 1600,
         useWebWorker: true,
+        maxIteration: 2,
+        initialQuality: 0.75,
       };
       
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         let fileToUpload = file;
         
-        // Apply compression only for image files
-        if (file.type.startsWith('image/')) {
+        // Apply compression for image files (matching MIME type or typical image extensions like HEIC)
+        const isImage = file.type.startsWith('image/') || /\.(heic|heif|jpg|jpeg|png|webp)$/i.test(file.name);
+        
+        if (isImage) {
           try {
             fileToUpload = await imageCompression(file, compressionOptions);
-          } catch (compErr) {
+          } catch (compErr: any) {
             console.warn(`Compression failed for ${file.name}, uploading original file:`, compErr);
+            setFormError(prev => (prev ? prev + ' | ' : '') + `Compression warning for ${file.name}: ${compErr.message || 'failed'}`);
           }
         }
         
