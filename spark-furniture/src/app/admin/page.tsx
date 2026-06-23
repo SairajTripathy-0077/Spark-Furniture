@@ -242,14 +242,39 @@ export default function AdminDashboard() {
         const file = files[i];
         let fileToUpload = file;
         
-        // Apply compression for image files (matching MIME type or typical image extensions like HEIC)
-        const isImage = file.type.startsWith('image/') || /\.(heic|heif|jpg|jpeg|png|webp)$/i.test(file.name);
+        // 1. Pre-convert HEIC/HEIF files to JPEG using heic2any (since browsers cannot natively decode HEIC)
+        const isHEIC = file.type === 'image/heic' || file.type === 'image/heif' || /\.(heic|heif)$/i.test(file.name);
+        
+        if (isHEIC) {
+          try {
+            // Dynamically import heic2any to keep initial admin bundle size small
+            const heic2any = (await import('heic2any')).default;
+            const conversionResult = await heic2any({
+              blob: file,
+              toType: 'image/jpeg',
+              quality: 0.8,
+            });
+            
+            const jpegBlob = Array.isArray(conversionResult) ? conversionResult[0] : conversionResult;
+            fileToUpload = new File(
+              [jpegBlob],
+              file.name.replace(/\.[^/.]+$/, ".jpg"),
+              { type: "image/jpeg" }
+            );
+          } catch (heicErr: any) {
+            console.error("HEIC conversion failed:", heicErr);
+            setFormError(prev => (prev ? prev + ' | ' : '') + `HEIC conversion failed for ${file.name}: ${heicErr.message || 'decoder error'}`);
+          }
+        }
+        
+        // 2. Apply fast client-side image compression
+        const isImage = fileToUpload.type.startsWith('image/') || /\.(heic|heif|jpg|jpeg|png|webp)$/i.test(fileToUpload.name);
         
         if (isImage) {
           try {
-            fileToUpload = await imageCompression(file, compressionOptions);
+            fileToUpload = await imageCompression(fileToUpload, compressionOptions);
           } catch (compErr: any) {
-            console.warn(`Compression failed for ${file.name}, uploading original file:`, compErr);
+            console.warn(`Compression failed for ${file.name}, uploading current file:`, compErr);
             setFormError(prev => (prev ? prev + ' | ' : '') + `Compression warning for ${file.name}: ${compErr.message || 'failed'}`);
           }
         }
