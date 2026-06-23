@@ -20,6 +20,7 @@ export interface Product {
   badge?: 'New' | 'Sale' | 'Limited';
   imageUrl?: string | null;
   imageUrls?: string[];
+  inStock?: boolean;
 }
 
 interface ProductCardProps {
@@ -68,6 +69,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView, 
       <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-neutral-50 flex items-center justify-center">
         {/* Badges */}
         <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
+          {product.inStock === false && (
+            <span className="rounded-full bg-neutral-600 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white">
+              Sold Out
+            </span>
+          )}
           {product.badge === 'New' && (
             <span className="rounded-full bg-[#31170E] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#fdf9f4]">
               New
@@ -98,7 +104,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView, 
         </button>
 
         {/* Sketch Placeholder or Cloudinary Image */}
-        <div className="h-full w-full transition-transform duration-500 ease-out group-hover:scale-[1.03] flex items-center justify-center">
+        <div className={`h-full w-full transition-transform duration-500 ease-out group-hover:scale-[1.03] flex items-center justify-center ${product.inStock === false ? 'opacity-55' : ''}`}>
           {product.imageUrl ? (
             <img src={product.imageUrl} alt={product.name} className="h-full w-full object-cover" />
           ) : (
@@ -163,13 +169,22 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView, 
 
         {/* Action Buttons (Permanent, Desktop & Mobile) */}
         <div className="mt-3.5 flex gap-2">
-          <button
-            onClick={handleAddToCart}
-            className="flex-1 flex items-center justify-center gap-1.5 rounded-lg bg-[#31170E] py-2 text-xs font-bold uppercase tracking-wider text-[#fdf9f4] hover:bg-[#6b4335] active:scale-[0.97] transition-all duration-200 cursor-pointer shadow-sm"
-          >
-            <ShoppingCart size={13} />
-            <span>Add to Cart</span>
-          </button>
+          {product.inStock === false ? (
+            <button
+              disabled
+              className="flex-1 flex items-center justify-center gap-1.5 rounded-lg bg-neutral-200 py-2 text-xs font-bold uppercase tracking-wider text-neutral-400 cursor-not-allowed shadow-none"
+            >
+              <span>Sold Out</span>
+            </button>
+          ) : (
+            <button
+              onClick={handleAddToCart}
+              className="flex-1 flex items-center justify-center gap-1.5 rounded-lg bg-[#31170E] py-2 text-xs font-bold uppercase tracking-wider text-[#fdf9f4] hover:bg-[#6b4335] active:scale-[0.97] transition-all duration-200 cursor-pointer shadow-sm"
+            >
+              <ShoppingCart size={13} />
+              <span>Add to Cart</span>
+            </button>
+          )}
           <button
             onClick={(e) => {
               e.stopPropagation();

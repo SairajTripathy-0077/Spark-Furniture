@@ -96,14 +96,18 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({ product, onC
                 <img 
                   src={product.imageUrls[activeImageIndex]} 
                   alt={`${product.name} - View ${activeImageIndex + 1}`} 
-                  className="h-full w-full object-cover" 
+                  className={`h-full w-full object-cover ${product.inStock === false ? 'opacity-65' : ''}`} 
                 />
               ) : product.imageUrl ? (
-                <img src={product.imageUrl} alt={product.name} className="h-full w-full object-cover" />
+                <img src={product.imageUrl} alt={product.name} className={`h-full w-full object-cover ${product.inStock === false ? 'opacity-65' : ''}`} />
               ) : (
-                <FurnitureSketch type={product.imageType} className="h-full w-full" />
+                <FurnitureSketch type={product.imageType} className={`h-full w-full ${product.inStock === false ? 'opacity-65' : ''}`} />
               )}
-              {product.badge && (
+              {product.inStock === false ? (
+                <span className="absolute top-4 left-4 rounded-full bg-neutral-600 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm">
+                  Sold Out
+                </span>
+              ) : product.badge && (
                 <span className="absolute top-4 left-4 rounded-full bg-[#31170E] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#fdf9f4]">
                   {product.badge}
                 </span>
@@ -204,39 +208,48 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({ product, onC
 
             {/* Actions Panel */}
             <div className="mt-8 space-y-4">
-              <div className="flex gap-4 items-center">
-                {/* Quantity */}
-                <div className="flex items-center rounded-lg border border-neutral-200 bg-white px-2 py-1 shadow-sm">
+              {product.inStock === false ? (
+                <div className="flex gap-4 items-center">
                   <button
-                    onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                    className="p-1.5 hover:text-black text-neutral-400 transition-colors cursor-pointer"
-                    aria-label="Decrease quantity"
+                    disabled
+                    className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-neutral-200 py-3 text-sm font-semibold text-neutral-400 cursor-not-allowed shadow-none"
                   >
-                    <X size={12} className="rotate-45" /> {/* Use X rotated or similar since we have minus */}
-                  </button>
-                  <span className="w-8 text-center text-sm font-semibold text-[#31170E]">
-                    {quantity}
-                  </span>
-                  <button
-                    onClick={() => setQuantity((q) => q + 1)}
-                    className="p-1.5 hover:text-black text-neutral-400 transition-colors cursor-pointer"
-                    aria-label="Increase quantity"
-                  >
-                    <span className="font-bold text-sm">+</span>
+                    Sold Out / Out of Stock
                   </button>
                 </div>
+              ) : (
+                <div className="flex gap-4 items-center">
+                  {/* Quantity */}
+                  <div className="flex items-center rounded-lg border border-neutral-200 bg-white px-2 py-1 shadow-sm">
+                    <button
+                      onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                      className="p-1.5 hover:text-black text-neutral-400 transition-colors cursor-pointer"
+                      aria-label="Decrease quantity"
+                    >
+                      <X size={12} className="rotate-45" />
+                    </button>
+                    <span className="w-8 text-center text-sm font-semibold text-[#31170E]">
+                      {quantity}
+                    </span>
+                    <button
+                      onClick={() => setQuantity((q) => q + 1)}
+                      className="p-1.5 hover:text-black text-neutral-400 transition-colors cursor-pointer"
+                      aria-label="Increase quantity"
+                    >
+                      <span className="font-bold text-sm">+</span>
+                    </button>
+                  </div>
 
-                {/* Add to Cart */}
-                <button
-                  onClick={handleAddToCart}
-                  className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-[#31170E] py-3 text-sm font-semibold text-[#fdf9f4] shadow-md transition-all hover:bg-[#6b4335] active:scale-[0.98] cursor-pointer"
-                >
-                  <ShoppingCart size={16} />
-                  Add to Cart - ₹{(product.price * quantity).toLocaleString()}
-                </button>
-              </div>
-
-
+                  {/* Add to Cart */}
+                  <button
+                    onClick={handleAddToCart}
+                    className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-[#31170E] py-3 text-sm font-semibold text-[#fdf9f4] shadow-md transition-all hover:bg-[#6b4335] active:scale-[0.98] cursor-pointer"
+                  >
+                    <ShoppingCart size={16} />
+                    Add to Cart - ₹{(product.price * quantity).toLocaleString()}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </motion.div>

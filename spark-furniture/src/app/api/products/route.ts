@@ -55,7 +55,7 @@ export async function POST(request: Request) {
     }
     
     const body = await request.json();
-    const { name, price, originalPrice, category, description, colors, imageType, imageUrl, imageUrls, badge } = body;
+    const { name, price, originalPrice, category, description, colors, imageType, imageUrl, imageUrls, badge, inStock } = body;
     
     if (!name || price === undefined || !category || !description) {
       return NextResponse.json({ success: false, message: 'Missing required fields' }, { status: 400 });
@@ -76,6 +76,7 @@ export async function POST(request: Request) {
         imageUrl: finalImageUrl,
         imageUrls: finalImageUrls,
         badge: badge || null,
+        inStock: inStock !== undefined ? Boolean(inStock) : true,
         rating: 4.8, // default rating for new products
         reviewsCount: Math.floor(Math.random() * 20) + 1, // seed reviews count
       }
@@ -98,7 +99,7 @@ export async function PUT(request: Request) {
     }
     
     const body = await request.json();
-    const { id, name, price, originalPrice, category, description, colors, imageType, imageUrl, imageUrls, badge } = body;
+    const { id, name, price, originalPrice, category, description, colors, imageType, imageUrl, imageUrls, badge, inStock } = body;
     
     if (!id) {
       return NextResponse.json({ success: false, message: 'Product ID is required' }, { status: 400 });
@@ -124,6 +125,7 @@ export async function PUT(request: Request) {
         imageUrl: finalImageUrl,
         imageUrls: finalImageUrls,
         badge,
+        inStock: inStock !== undefined ? Boolean(inStock) : undefined,
       }
     });
 

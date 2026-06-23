@@ -29,6 +29,7 @@ interface Product {
   imageUrl: string | null;
   imageUrls?: string[];
   badge: string | null;
+  inStock?: boolean;
 }
 
 interface OrderItem {
@@ -82,6 +83,7 @@ export default function AdminDashboard() {
   const [price, setPrice] = useState('');
   const [originalPrice, setOriginalPrice] = useState('');
   const [category, setCategory] = useState('Chairs');
+  const [inStock, setInStock] = useState(true);
   const [description, setDescription] = useState('');
   const [badge, setBadge] = useState('');
   const [imageType, setImageType] = useState('chair');
@@ -264,6 +266,7 @@ export default function AdminDashboard() {
     setPrice('');
     setOriginalPrice('');
     setCategory(categories[0] || 'Chairs');
+    setInStock(true);
     setDescription('');
     setBadge('');
     setImageType('chair');
@@ -281,6 +284,7 @@ export default function AdminDashboard() {
     setPrice(prod.price.toString());
     setOriginalPrice(prod.originalPrice ? prod.originalPrice.toString() : '');
     setCategory(prod.category);
+    setInStock(prod.inStock !== false);
     setDescription(prod.description);
     setBadge(prod.badge || '');
     setImageType(prod.imageType);
@@ -428,7 +432,8 @@ export default function AdminDashboard() {
       imageType,
       imageUrl: imageUrls[0] || null,
       imageUrls,
-      badge: badge || null
+      badge: badge || null,
+      inStock,
     };
     
     try {
@@ -583,6 +588,15 @@ export default function AdminDashboard() {
                             <span className="rounded bg-[#31170E]/5 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#31170E]">
                               {prod.category}
                             </span>
+                            {prod.inStock !== false ? (
+                              <span className="rounded bg-green-500/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-green-700">
+                                In Stock
+                              </span>
+                            ) : (
+                              <span className="rounded bg-red-500/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-red-700">
+                                Sold Out
+                              </span>
+                            )}
                             {prod.badge && (
                               <span className="rounded bg-amber-500/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-amber-700">
                                 {prod.badge}
@@ -644,6 +658,7 @@ export default function AdminDashboard() {
                         <th className="px-6 py-4">Category</th>
                         <th className="px-6 py-4">Price</th>
                         <th className="px-6 py-4">Colors</th>
+                        <th className="px-6 py-4">Status</th>
                         <th className="px-6 py-4">Badge</th>
                         <th className="px-6 py-4 text-right">Actions</th>
                       </tr>
@@ -685,6 +700,17 @@ export default function AdminDashboard() {
                               ))}
                               {(!prod.colors || prod.colors.length === 0) && <span className="text-xs text-neutral-400 font-normal italic">No colors</span>}
                             </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            {prod.inStock !== false ? (
+                              <span className="rounded bg-green-500/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-green-700">
+                                In Stock
+                              </span>
+                            ) : (
+                              <span className="rounded bg-red-500/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-red-700">
+                                Sold Out
+                              </span>
+                            )}
                           </td>
                           <td className="px-6 py-4">
                             {prod.badge ? (
@@ -1109,6 +1135,20 @@ export default function AdminDashboard() {
                     placeholder="Describe the styling details, materials, and dimension characteristics..."
                     className="w-full mt-2 rounded-xl border border-neutral-200 bg-white py-2.5 px-4 text-xs font-semibold text-[#31170E] focus:border-[#31170E] focus:outline-none focus:ring-1 focus:ring-[#31170E]/20 transition-all duration-300"
                   />
+                </div>
+
+                {/* Stock Status */}
+                <div className="flex items-center gap-3 p-3.5 bg-white rounded-xl border border-neutral-200">
+                  <input
+                    type="checkbox"
+                    id="inStock"
+                    checked={inStock}
+                    onChange={(e) => setInStock(e.target.checked)}
+                    className="h-4 w-4 rounded border-neutral-300 text-[#31170E] focus:ring-[#31170E] cursor-pointer"
+                  />
+                  <label htmlFor="inStock" className="text-xs font-bold uppercase tracking-wider text-[#31170E]/70 cursor-pointer select-none">
+                    Item is in Stock / Available for Order
+                  </label>
                 </div>
 
                 <div className="flex gap-3 justify-end pt-4 border-t border-[#31170E]/10">
