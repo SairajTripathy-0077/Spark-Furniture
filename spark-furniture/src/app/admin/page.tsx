@@ -67,6 +67,16 @@ export default function AdminDashboard() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
+  // Category management states
+  const [categories, setCategories] = useState<string[]>([]);
+  const [categoriesData, setCategoriesData] = useState<{ id: string; name: string }[]>([]);
+  const [loadingCategories, setLoadingCategories] = useState(true);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState('');
+  const [categoryError, setCategoryError] = useState('');
+  const [categorySuccess, setCategorySuccess] = useState('');
+  const [deletingCatId, setDeletingCatId] = useState<string | null>(null);
+
   // Form inputs
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
@@ -114,6 +124,78 @@ export default function AdminDashboard() {
 
   const router = useRouter();
 
+  // Fetch categories
+  const fetchCategories = async () => {
+    try {
+      const res = await fetch('/api/categories', { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        setCategoriesData(data);
+        const names = data.map((c: any) => c.name);
+        setCategories(names);
+      }
+    } catch (e) {
+      console.error('Failed to load categories:', e);
+    } finally {
+      setLoadingCategories(false);
+    }
+  };
+
+  const handleAddCategory = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newCategoryName.trim()) return;
+    
+    setCategoryError('');
+    setCategorySuccess('');
+    
+    try {
+      const res = await fetch('/api/categories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newCategoryName.trim() })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setCategorySuccess('Category added successfully!');
+        setNewCategoryName('');
+        fetchCategories();
+      } else {
+        setCategoryError(data.error || 'Failed to add category');
+      }
+    } catch (err) {
+      setCategoryError('Failed to connect to API');
+    }
+  };
+
+  const handleDeleteCategory = async (id: string, name: string) => {
+    if (!confirm(`Are you sure you want to delete the category "${name}"?`)) return;
+    
+    setCategoryError('');
+    setCategorySuccess('');
+    setDeletingCatId(id);
+    
+    try {
+      const res = await fetch(`/api/categories?id=${id}`, {
+        method: 'DELETE'
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setCategorySuccess('Category deleted successfully!');
+        fetchCategories();
+        // If the current product edit category was deleted, reset it
+        if (category === name) {
+          setCategory(categories[0] || 'Chairs');
+        }
+      } else {
+        setCategoryError(data.error || 'Failed to delete category');
+      }
+    } catch (err) {
+      setCategoryError('Failed to connect to API');
+    } finally {
+      setDeletingCatId(null);
+    }
+  };
+
   useEffect(() => {
     // 1. Authenticate check
     async function checkAuth() {
@@ -126,6 +208,7 @@ export default function AdminDashboard() {
           // Load data
           fetchProducts();
           fetchOrders();
+          fetchCategories();
         }
       } catch (err) {
         router.replace('/admin/login');
@@ -180,7 +263,7 @@ export default function AdminDashboard() {
     setName('');
     setPrice('');
     setOriginalPrice('');
-    setCategory('Chairs');
+    setCategory(categories[0] || 'Chairs');
     setDescription('');
     setBadge('');
     setImageType('chair');
@@ -935,19 +1018,41 @@ export default function AdminDashboard() {
                   
                   {/* Category */}
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-[#31170E]/70">Category</label>
+                    <div className="flex items-center justify-between">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-[#31170E]/70">Category</label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setCategoryError('');
+                          setCategorySuccess('');
+                          setNewCategoryName('');
+                          setIsCategoryModalOpen(true);
+                        }}
+                        className="text-[10px] font-bold uppercase tracking-wider text-[#31170E] hover:underline cursor-pointer flex items-center gap-1"
+                      >
+                        <Plus size={10} />
+                        Manage Categories
+                      </button>
+                    </div>
                     <select
                       value={category}
                       onChange={(e) => setCategory(e.target.value)}
                       className="w-full mt-2 rounded-xl border border-neutral-200 bg-white py-2.5 px-4 text-xs font-bold uppercase tracking-wider text-[#31170E] focus:border-[#31170E] focus:outline-none focus:ring-1 focus:ring-[#31170E]/20 cursor-pointer transition-all duration-300"
                     >
-                      <option value="Chairs">Chairs</option>
-                      <option value="Workstations">Workstations</option>
-                      <option value="Modular Furniture">Modular Furniture</option>
-                      <option value="Bed">Bed</option>
-                      <option value="Sofa">Sofa</option>
-                      <option value="Dinning Sets">Dinning Sets</option>
-                      <option value="Mattress">Mattress</option>
+                      {categories.map((cat) => (
+                        <option key={cat} value={cat}>{cat}</option>
+                      ))}
+                      {categories.length === 0 && (
+                        <>
+                          <option value="Chairs">Chairs</option>
+                          <option value="Workstations">Workstations</option>
+                          <option value="Modular Furniture">Modular Furniture</option>
+                          <option value="Bed">Bed</option>
+                          <option value="Sofa">Sofa</option>
+                          <option value="Dinning Sets">Dinning Sets</option>
+                          <option value="Mattress">Mattress</option>
+                        </>
+                      )}
                     </select>
                   </div>
                 </div>
@@ -1157,6 +1262,106 @@ export default function AdminDashboard() {
                   className="rounded-xl bg-[#31170E] px-6 py-3 text-xs font-bold uppercase tracking-wider text-[#fdf9f4] shadow hover:bg-[#6b4335] active:scale-95 cursor-pointer"
                 >
                   Close Summary
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Category Management Modal */}
+      <AnimatePresence>
+        {isCategoryModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsCategoryModalOpen(false)}
+              className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
+            />
+            
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              className="relative z-10 w-full max-w-md overflow-hidden rounded-3xl border border-[#31170E]/10 bg-[#fdf9f4] p-5 sm:p-6 shadow-2xl flex flex-col max-h-[80vh]"
+            >
+              <button
+                type="button"
+                onClick={() => setIsCategoryModalOpen(false)}
+                className="absolute right-4 top-4 rounded-full p-1.5 text-neutral-400 hover:bg-neutral-100 hover:text-black cursor-pointer"
+              >
+                <X size={18} />
+              </button>
+
+              <h3 className="font-serif text-lg font-bold mb-4 pr-6">Manage Categories</h3>
+              
+              {/* Category Add Form */}
+              <form onSubmit={handleAddCategory} className="flex gap-2 mb-4">
+                <input
+                  type="text"
+                  required
+                  placeholder="New Category (e.g. Desks)"
+                  value={newCategoryName}
+                  onChange={(e) => setNewCategoryName(e.target.value)}
+                  className="flex-1 rounded-xl border border-neutral-200 bg-white py-2 px-3 text-xs font-semibold text-[#31170E] focus:border-[#31170E] focus:outline-none transition-all duration-300"
+                />
+                <button
+                  type="submit"
+                  className="rounded-xl bg-[#31170E] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#fdf9f4] shadow hover:bg-[#6b4335] active:scale-95 transition-all cursor-pointer flex items-center gap-1"
+                >
+                  <Plus size={12} />
+                  Add
+                </button>
+              </form>
+
+              {/* Status messages */}
+              {categoryError && (
+                <div className="mb-3 text-[10px] font-semibold text-red-755 bg-red-50 px-2 py-1 rounded flex items-center gap-1 border border-red-100">
+                  <AlertCircle size={10} className="flex-shrink-0" />
+                  <span className="text-red-700">{categoryError}</span>
+                </div>
+              )}
+              {categorySuccess && (
+                <div className="mb-3 text-[10px] font-semibold text-green-700 bg-green-50 px-2 py-1 rounded flex items-center gap-1 border border-green-100">
+                  <Check size={10} className="flex-shrink-0" />
+                  <span className="text-green-600">{categorySuccess}</span>
+                </div>
+              )}
+
+              {/* Category List */}
+              <div className="flex-1 overflow-y-auto min-h-0 pr-1 space-y-2">
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-neutral-400 mb-1">Current Categories ({categoriesData.length})</label>
+                {loadingCategories ? (
+                  <div className="text-center py-6 text-neutral-400 text-xs">Loading categories...</div>
+                ) : categoriesData.length === 0 ? (
+                  <div className="text-center py-6 text-neutral-400 text-xs italic">No categories found</div>
+                ) : (
+                  categoriesData.map((cat) => (
+                    <div key={cat.id} className="flex items-center justify-between rounded-xl border border-neutral-100 bg-white p-2.5 shadow-xs hover:bg-neutral-50/50 transition-colors">
+                      <span className="text-xs font-bold text-[#31170E] tracking-wide">{cat.name}</span>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteCategory(cat.id, cat.name)}
+                        disabled={deletingCatId === cat.id}
+                        className="rounded-lg p-1.5 text-neutral-400 hover:bg-red-50 hover:text-red-600 transition-colors cursor-pointer disabled:opacity-50 animate-all"
+                        title={`Delete ${cat.name}`}
+                      >
+                        <Trash2 size={12} />
+                      </button>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              <div className="mt-4 pt-3 border-t border-neutral-100 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setIsCategoryModalOpen(false)}
+                  className="rounded-xl border border-neutral-200 px-4 py-2 text-xs font-bold uppercase tracking-wider text-neutral-500 hover:bg-neutral-50 cursor-pointer"
+                >
+                  Done
                 </button>
               </div>
             </motion.div>

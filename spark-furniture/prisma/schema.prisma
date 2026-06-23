@@ -5,6 +5,7 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
+  output   = "../src/generated/client"
 }
 
 model Product {
@@ -36,4 +37,10 @@ model Order {
   items           String   // JSON array of cart items: [{"id":"...", "name":"...", "price":..., "quantity":..., "selectedColor":"...", "imageType":"..."}]
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+}
+
+model Category {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String   @unique
+  createdAt DateTime @default(now())
 }

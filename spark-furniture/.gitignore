@@ -43,3 +43,7 @@ next-env.d.ts
 # local developer guide
 /codebase_guide.md
 
+# prisma generated client
+/src/generated/client
+
+

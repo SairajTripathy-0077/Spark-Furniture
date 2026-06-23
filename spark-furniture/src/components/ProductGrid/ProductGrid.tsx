@@ -10,7 +10,7 @@ import { useFavorites } from '@/context/FavoritesContext';
 
 const productsData: Product[] = [];
 
-const categories = ['All', 'Chairs', 'Workstations', 'Modular Furniture', 'Bed', 'Sofa', 'Dinning Sets', 'Mattress'];
+const DEFAULT_CATEGORIES = ['All', 'Chairs', 'Workstations', 'Modular Furniture', 'Bed', 'Sofa', 'Dinning Sets', 'Mattress'];
 
 interface ProductGridProps {
   hideHeader?: boolean;
@@ -18,6 +18,7 @@ interface ProductGridProps {
 
 export const ProductGrid: React.FC<ProductGridProps> = ({ hideHeader = false }) => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<string[]>(DEFAULT_CATEGORIES);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('featured');
@@ -33,6 +34,24 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ hideHeader = false }) 
         setShowOnlyFavorites(true);
       }
     }
+  }, []);
+
+  useEffect(() => {
+    async function loadCategories() {
+      try {
+        const res = await fetch('/api/categories', { cache: 'no-store' });
+        if (res.ok) {
+          const data = await res.json();
+          const dynamicNames = data.map((c: any) => c.name);
+          if (dynamicNames.length > 0) {
+            setCategories(['All', ...dynamicNames]);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load dynamic categories, using default fallback:', err);
+      }
+    }
+    loadCategories();
   }, []);
 
   useEffect(() => {

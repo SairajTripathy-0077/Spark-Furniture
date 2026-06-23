@@ -1,11 +1,26 @@
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require('../src/generated/client');
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('Clearing all products from the database...');
-  const deleteResult = await prisma.product.deleteMany({});
-  console.log(`Deleted ${deleteResult.count} products.`);
-  console.log('Database cleared successfully.');
+  console.log('Seeding categories...');
+  const defaultCategories = [
+    'Chairs', 
+    'Workstations', 
+    'Modular Furniture', 
+    'Bed', 
+    'Sofa', 
+    'Dinning Sets', 
+    'Mattress'
+  ];
+
+  for (const catName of defaultCategories) {
+    await prisma.category.upsert({
+      where: { name: catName },
+      update: {},
+      create: { name: catName }
+    });
+  }
+  console.log('Categories seeded successfully.');
 }
 
 main()

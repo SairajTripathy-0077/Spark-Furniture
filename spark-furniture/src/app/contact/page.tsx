@@ -52,7 +52,7 @@ ${formData.message}`;
         <div className="bg-white p-4 rounded-3xl border border-neutral-100 shadow-sm overflow-hidden">
           <div className="rounded-2xl overflow-hidden h-[300px] sm:h-[400px] relative w-full border border-neutral-100">
             <iframe 
-              src="https://maps.google.com/maps?q=Spark%20Furniture,%20Dumduma,%20Bhubaneswar&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+              src="https://maps.google.com/maps?q=Spark%20Furniture,%20Plot%20No.%20492,%20Khandagiri,%20Bhubaneswar,%20Odisha%20751019&t=&z=16&ie=UTF8&iwloc=A&output=embed" 
               width="100%" 
               height="100%" 
               style={{ border: 0 }} 
