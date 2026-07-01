@@ -73,6 +73,11 @@ export const metadata: Metadata = {
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
   },
+  icons: {
+    icon: "/logo.png",
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({
@@ -97,6 +102,7 @@ export default function RootLayout({
               "alternateName": "Spark Furnitures",
               "legalName": "Spark Furnitures Pvt Ltd",
               "image": "https://www.sparkfurnitures.in/logo.png",
+              "logo": "https://www.sparkfurnitures.in/logo.png",
               "@id": "https://www.sparkfurnitures.in/#organization",
               "url": "https://www.sparkfurnitures.in",
               "telephone": "+919777915706",
