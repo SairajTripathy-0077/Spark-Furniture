@@ -30,7 +30,7 @@ const Hero = () => {
       <Container className="relative overflow-hidden h-[30vh] min-h-[220px] md:h-[50vh] md:min-h-[400px] bg-[#fdf9f4]">
         <Image
           src="/hero.png"
-          alt="Hero"
+          alt="Spark Furniture Luxury Office and Home Furniture Showroom Display in Bhubaneswar, Odisha"
           width={1200}
           height={500}
           className="absolute inset-0 w-full h-full object-cover opacity-50"

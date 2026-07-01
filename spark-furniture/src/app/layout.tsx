@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     default: "Spark Furniture | Premium Custom Furniture in Bhubaneswar, Odisha",
     template: "%s | Spark Furniture",
   },
-  description: "Spark Furniture (also known as Spark Furnitures) is Odisha's leading ISO-certified manufacturer of luxury office chairs, executive desks, modular workstations, custom wooden sofas, premium beds, and home interior decor.",
+  description: "Spark Furniture designs, manufactures, and customizes premium home and office furniture in Odisha. Explore our range of luxury office chairs, modular workstations, executive desks, custom wooden sofas, premium beds, and turnkey interior solutions.",
   keywords: [
     "spark furniture",
     "spark furnitures",
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Spark Furniture | Premium Custom Furniture in Bhubaneswar, Odisha",
-    description: "ISO-certified manufacturer of luxury office chairs, modular office workstations, wooden sofas, custom beds, and modular home furniture. Spark Furniture (Spark Furnitures) in Bhubaneswar, Odisha.",
+    description: "Discover premium custom home & office furniture by Spark Furniture in Bhubaneswar, Odisha. We manufacture & design luxury office chairs, executive modular workstations, handcrafted sofas, custom beds, and turnkey interiors.",
     url: "https://sparkfurnitures.in",
     siteName: "Spark Furniture",
     images: [
@@ -69,6 +69,9 @@ export const metadata: Metadata = {
       "max-image-preview": "large",
       "max-snippet": -1,
     },
+  },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
   },
 };
 

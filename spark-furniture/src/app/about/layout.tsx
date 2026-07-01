@@ -2,13 +2,13 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'About Us',
-  description: 'Spark Furniture (also known as Spark Furnitures) is a leading manufacturer of premium, handcrafted luxury office and home furniture in Bhubaneswar, Odisha. ISO-certified standards since 2012.',
+  description: 'Learn how Spark Furniture designs and manufactures premium, handcrafted home and office furniture in Bhubaneswar, Odisha. Explore our 14+ years of design expertise, custom workshops, and prestigious clients.',
   alternates: {
     canonical: '/about',
   },
   openGraph: {
     title: 'About Us | Spark Furniture',
-    description: 'Learn about Spark Furniture (Spark Furnitures) and our 14+ years of furniture design excellence, ISO certified quality standards, leadership board, and corporate clients in Bhubaneswar, Odisha.',
+    description: 'Explore the story of Spark Furniture. We custom-design and manufacture luxury corporate office desks, ergonomic seating, modular furniture, and premium home interiors in Bhubaneswar, Odisha.',
     url: 'https://www.sparkfurnitures.in/about',
   },
 };

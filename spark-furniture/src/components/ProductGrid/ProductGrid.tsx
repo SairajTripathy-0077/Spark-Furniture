@@ -14,10 +14,11 @@ const DEFAULT_CATEGORIES = ['All', 'Chairs', 'Workstations', 'Modular Furniture'
 
 interface ProductGridProps {
   hideHeader?: boolean;
+  initialProducts?: Product[];
 }
 
-export const ProductGrid: React.FC<ProductGridProps> = ({ hideHeader = false }) => {
-  const [products, setProducts] = useState<Product[]>([]);
+export const ProductGrid: React.FC<ProductGridProps> = ({ hideHeader = false, initialProducts }) => {
+  const [products, setProducts] = useState<Product[]>(initialProducts || []);
   const [categories, setCategories] = useState<string[]>(DEFAULT_CATEGORIES);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
@@ -55,6 +56,11 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ hideHeader = false }) 
   }, []);
 
   useEffect(() => {
+    if (initialProducts && initialProducts.length > 0) {
+      setProducts(initialProducts);
+      return;
+    }
+
     async function loadProducts() {
       try {
         const res = await fetch('/api/products', { cache: 'no-store' });
@@ -70,7 +76,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ hideHeader = false }) 
       }
     }
     loadProducts();
-  }, []);
+  }, [initialProducts]);
 
   // Filter and sort logic
   const filteredAndSortedProducts = useMemo(() => {
