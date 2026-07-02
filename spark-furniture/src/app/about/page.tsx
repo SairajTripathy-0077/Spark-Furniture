@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Award, MapPin, User } from 'lucide-react';
 import Container from '@/components/Container';
@@ -63,9 +64,9 @@ export default function AboutPage() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"
+            className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight uppercase"
           >
-            Spark Furniture
+            SPARK FURNITURE
           </motion.h1>
           <motion.p
             initial={{ opacity: 0 }}
@@ -98,12 +99,14 @@ export default function AboutPage() {
               ))}
             </div>
           </div>
-          <div className="relative aspect-video rounded-2xl overflow-hidden bg-gradient-to-tr from-[#eddcd2] to-[#ddb892] flex items-center justify-center p-8">
-            <div className="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:10px_16px]"></div>
-            <div className="text-center z-10 space-y-2">
-              <span className="text-4xl font-serif font-bold">14+ Years</span>
-              <p className="text-xs uppercase tracking-widest font-bold text-[#31170E]/70">Of Uncompromised Excellence</p>
-            </div>
+          <div className="relative aspect-video rounded-2xl overflow-hidden border border-[#31170E]/10 shadow-sm group">
+            <Image
+              src="/showroom.jpeg"
+              alt="Spark Furniture Luxury Showroom in Bhubaneswar, Odisha"
+              fill
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
           </div>
         </section>
 
@@ -131,10 +134,14 @@ export default function AboutPage() {
                 <span className="flex items-center gap-1.5">✓ Design Office</span>
               </div>
             </div>
-            <div className="w-full md:w-1/3 bg-neutral-50 p-6 rounded-2xl border border-neutral-100 text-center space-y-1">
-              <span className="text-3xl font-serif font-extrabold text-[#31170E]">11,500+</span>
-              <p className="text-xs font-bold uppercase tracking-wider text-[#6b4335]">Square Feet Display</p>
-              <p className="text-[11px] text-neutral-500 pt-1">Bhubaneswar Head Office Campus</p>
+            <div className="w-full md:w-1/3 relative aspect-[4/3] rounded-2xl overflow-hidden border border-[#31170E]/10 shadow-sm group">
+              <Image
+                src="/outphoto.jpeg"
+                alt="Spark Furniture Bhubaneswar Head Office Campus"
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                sizes="(max-width: 768px) 100vw, 33vw"
+              />
             </div>
           </div>
         </section>
