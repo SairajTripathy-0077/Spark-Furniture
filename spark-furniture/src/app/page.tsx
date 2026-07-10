@@ -1,8 +1,18 @@
+import { Metadata } from "next";
 import Hero from "@/components/Hero/Hero";
 import ProductGrid from "@/components/ProductGrid/ProductGrid";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    url: "https://www.sparkfurnitures.in",
+  },
+};
 
 async function getProducts() {
   try {

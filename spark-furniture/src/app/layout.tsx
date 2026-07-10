@@ -40,13 +40,10 @@ export const metadata: Metadata = {
     "premium modular workstation",
     "ergonomic study tables",
   ],
-  alternates: {
-    canonical: "/",
-  },
   openGraph: {
     title: "Spark Furniture | Premium Custom Furniture in Bhubaneswar, Odisha",
     description: "Discover premium custom home & office furniture by Spark Furniture in Bhubaneswar, Odisha. We manufacture & design luxury office chairs, executive modular workstations, handcrafted sofas, custom beds, and turnkey interiors.",
-    url: "https://sparkfurnitures.in",
+    url: "https://www.sparkfurnitures.in",
     siteName: "Spark Furniture",
     images: [
       {
